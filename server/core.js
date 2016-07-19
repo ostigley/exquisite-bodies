@@ -1,4 +1,5 @@
-import crop from './image-functions/crop.js'
+import crop 					from './image-functions/crop.js'
+import generateFinal 	from './image-functions/final.js'
 
 const progress = state => {
 	switch(state.progress) {
@@ -12,11 +13,12 @@ const progress = state => {
 }
 
 const level = state => {
-	console.log('level, called')
 		return  state.progress === 2 
 			? state.level+1
 			: state.level
 }
+
+
 
 export const startGame = () => {
 	return {
@@ -66,19 +68,29 @@ export const startGame = () => {
 	}
 }
 
+const scramble = (state) => {
+	let players = Object.assign({}, state.players)
+	for (let i = 1; i < 4; i++) {
+		players[i] = players[i].body === 3 
+			? {body: 1} 
+			: {body: players[i].body + 1}
+	}
+	return players
+}
+
 export const addPlayer = state => {
-	let nexstate = Object.assign({},state)
-	if (nexstate.players.num === 3) return nexstate
+	let nextState = Object.assign({},state)
+	if (nextState.players.num === 3) return nextState
 	
 	const nextPlayer = ++state.players.num
-	nexstate.players[nextPlayer] = {body: nextPlayer}
-	nexstate.players.num = nextPlayer
+	nextState.players[nextPlayer] = {body: nextPlayer}
+	nextState.players.num = nextPlayer
 	
-	if(nexstate.players.num === 3) {
-		nexstate.level = 1
+	if(nextState.players.num === 3) {
+		nextState.level = 1
 	}
 
-	return nexstate
+	return nextState
 }
 
 export const addBodyPart = (state, body, part, drawing) => {
@@ -88,7 +100,12 @@ export const addBodyPart = (state, body, part, drawing) => {
 	nextState.level = level(nextState)
 	nextState.progress = progress(nextState)
 	nextState.peep[body][part] = crop(drawing)
-		
+	nextState.players = nextState.level !== state.level 
+		? scramble(nextState)
+		: nextState.players
+	if (nextState.level === 4) {
+		nextState = generateFinal(nextState)
+	}
 	return nextState
 }
 

@@ -141,5 +141,44 @@ describe('AddBodyPart makes new level ', () => {
 	it('increments progress back to zero', () => {
 		assert.equal(nextState.progress, 0)
 	})
-
 })
+
+describe('AddBodyPart three times, scrambles player bodies', () => {	
+	const parts = ['head', 'body', 'feet']
+	const state = addPlayer(addPlayer(startGame()))
+	const state1 = addBodyPart(state, 1, parts[0], drawing1)
+	const state2 = addBodyPart(state1, 2, parts[0], drawing2)
+	const state3 = addBodyPart(state2, 3, parts[0], drawing3)
+	
+	it('players have another drawing which is not their own', () => {
+		for(let i = 1 ; i < 4; i ++) {
+			assert.notEqual(state3.players[i].body, i)
+		}
+	})
+})
+
+describe('After 9 rounds', () => {
+	const parts = ['head', 'body', 'feet']
+	let state = addPlayer(addPlayer(startGame()))
+	for(let i = 0; i < 3; i++) {
+		for (let k = 1; k < 4; k ++) {
+			state = addBodyPart(state, k, parts[i], drawing1)
+		}
+	}
+	
+	for(let i = 1; i < 4; i++) {
+		it(`each player has their original drawing back: ${i}: ${JSON.stringify(state.players[i])}`, () => {
+			assert.equal(state.players[i].body, i)
+		})
+		
+		it('each body has a final drawing dataURL string', () => {
+			expect(state.bodies[i].final).to.not.be.empty
+		})
+
+		it('each final drawing is a valid dataURL string', () => {
+			expect(state.bodies[i].final).to.contain('data:image/png;base64,')
+		})
+	}
+})
+
+
