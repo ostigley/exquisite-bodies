@@ -22,6 +22,8 @@
   },
   "dependencies": {
     "chai": "^3.5.0",
+    "clone": "^1.0.2",
+    "deep-freeze": "0.0.1",
     "mocha": "^2.5.3"
   }
 }

@@ -4,14 +4,22 @@ import {
 	addBodyPart}		from '../../../server/core.js'
 import 	{
 	expect,
-	assert}								from 'chai'
+	assert}					from 'chai'
 import {
 	drawing1, 
 	drawing2, 
-	drawing3}			from '../../helpers/test-drawings.js'
+	drawing3}				from '../../helpers/test-drawings.js'
 
 describe('Application logic for starting a new game ', () => {
 	const newGame = startGame()
+	it('returns a frozen / immutable object', () => {
+		assert(Object.isFrozen(newGame), 'it is frozen')
+		assert(Object.isFrozen(newGame.bodies), 'it is frozen')
+		assert(Object.isFrozen(newGame.players), 'it is frozen')
+		assert(Object.isFrozen(newGame.progress), 'it is frozen')
+		assert(Object.isFrozen(newGame.level), 'it is frozen')
+	})
+
 	it('returns an object with "bodies" Object', () => {
 		expect(Object.keys(newGame.bodies)).to.have.length(3)
 
@@ -49,6 +57,14 @@ describe ('Application logic for adding a player', () => {
 
 	const state = startGame()
 	const nextState = addPlayer(state)
+	it('returns a frozen / immutable object', () => {
+		assert(Object.isFrozen(nextState), 'it is frozen')
+		assert(Object.isFrozen(nextState.bodies), 'it is frozen')
+		assert(Object.isFrozen(nextState.players), 'it is frozen')
+		assert(Object.isFrozen(nextState.progress), 'it is frozen')
+		assert(Object.isFrozen(nextState.level), 'it is frozen')
+	})
+
 	it('adds a player to the player object', () => {
 		assert.equal(nextState.players.num,2)
 		assert(nextState.players[2])
@@ -86,9 +102,9 @@ describe ('Application logic for adding a player', () => {
 			let state = startGame()
 			state = addPlayer(state)
 			state = addPlayer(state)
-
 			assert(state.level)
 			assert.equal(state.level, 1)
+
 		})
 })
 
@@ -100,6 +116,14 @@ describe('AddBodyPart basic logic', () => {
 	const content = nextState.bodies[body][part]
 	const peep = nextState.peep[body][part]
 	
+	it('returns a frozen / immutable object', () => {
+		assert(Object.isFrozen(nextState), 'it is frozen')
+		assert(Object.isFrozen(nextState.bodies), 'it is frozen')
+		assert(Object.isFrozen(nextState.players), 'it is frozen')
+		assert(Object.isFrozen(nextState.progress), 'it is frozen')
+		assert(Object.isFrozen(nextState.level), 'it is frozen')
+	})
+
 	it('updates body with a player\'s drawing', () => {
 		expect(content).to.have.length.above(21)
 		assert.equal(content, drawing1)

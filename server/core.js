@@ -1,5 +1,8 @@
 import crop 					from './image-functions/crop.js'
 import generateFinal 	from './image-functions/final.js'
+import {INITIAL_STATE}from './new-game.js'
+import clone					from 'clone'
+import deepFreeze 		from 'deep-freeze'
 
 const progress = state => {
 	switch(state.progress) {
@@ -18,56 +21,6 @@ const level = state => {
 			: state.level
 }
 
-
-
-export const startGame = () => {
-	return {
-		bodies: {
-			1: {
-				head: "",
-				body: "",
-				feet: "",
-				final: ""
-			},
-			2: {
-				head: "",
-				body: "",
-				feet: "",
-				final: ""
-			},
-			3: {
-				head: "",
-				body: "",
-				feet: "",
-				final: ""
-			}
-		},
-		peep: {
-			1: {
-				head: "",
-				body: "",
-				feet: ""
-			},
-			2: {
-				head: "",
-				body: "",
-				feet: ""
-			},
-			3: {
-				head: "",
-				body: "",
-				feet: ""
-			}
-		},
-		level: null,
-		progress: 0,
-		players: {
-			1: {body: 1},
-			num: 1
-		}
-	}
-}
-
 const scramble = (state) => {
 	let players = Object.assign({}, state.players)
 	for (let i = 1; i < 4; i++) {
@@ -78,11 +31,15 @@ const scramble = (state) => {
 	return players
 }
 
+export const startGame = () => {
+	return INITIAL_STATE
+}
+
+
 export const addPlayer = state => {
-	let nextState = Object.assign({},state)
-	if (nextState.players.num === 3) return nextState
-	
-	const nextPlayer = ++state.players.num
+	let nextState = clone(state)
+	if (nextState.players.num === 3) return Object.freeze(nextState)
+	const nextPlayer = nextState.players.num+1
 	nextState.players[nextPlayer] = {body: nextPlayer}
 	nextState.players.num = nextPlayer
 	
@@ -90,11 +47,11 @@ export const addPlayer = state => {
 		nextState.level = 1
 	}
 
-	return nextState
+	return deepFreeze(nextState)
 }
 
 export const addBodyPart = (state, body, part, drawing) => {
-	let nextState = Object.assign({},state)
+	let nextState = clone(state)
 
 	nextState.bodies[body][part] = drawing
 	nextState.level = level(nextState)
@@ -106,7 +63,7 @@ export const addBodyPart = (state, body, part, drawing) => {
 	if (nextState.level === 4) {
 		nextState = generateFinal(nextState)
 	}
-	return nextState
+	return deepFreeze(nextState)
 }
 
 
