@@ -59,12 +59,11 @@ describe('Reducer START_GAME', () => {
 
 describe ('Reducer ADD_PLAYER', () => {
 
-	const state = reducer(null,{type: 'NEW_GAME'} )
-	const action = {
-		state: state,
-		type: 'ADD_PLAYER'
-	}
-	const nextState = reducer(state, action)
+	const actions = [
+		{type: 'NEW_GAME'},
+		{type: 'ADD_PLAYER'}	
+	]
+	const nextState = actions.reduce(reducer, {})
 	it('returns a frozen / immutable object', () => {
 		assert(Object.isFrozen(nextState), 'it is frozen')
 		assert(Object.isFrozen(nextState.bodies), 'it is frozen')
@@ -119,15 +118,20 @@ describe ('Reducer ADD_PLAYER', () => {
 describe('Reducer ADD_DRAWING', () => {
 	const body = 1
 	const part = 'head'
-	const state = addPlayer(addPlayer(startGame()))
+
+	const actions = [
+		{type: 'NEW_GAME'},
+		{type: 'ADD_PLAYER'},	
+		{type: 'ADD_PLAYER'},
+		{
+			type: 'ADD_DRAWING',
+			body: body,
+			part: part,
+			drawing: drawing1
+		}
+	]
+	const nextState = actions.reduce(reducer, {})
 	
-	const action = {
-		type: 'ADD_DRAWING',
-		body: body,
-		part: part,
-		drawing: drawing1
-	}
-	const nextState = reducer(state, action)
 	const content = nextState.bodies[body][part]
 	const peep = nextState.peep[body][part]
 	
@@ -146,11 +150,11 @@ describe('Reducer ADD_DRAWING', () => {
 
 	it('increments the progress', () => {
 		assert(nextState.progress)
-		assert.equal(nextState.progress, state.progress+1)
+		assert.equal(nextState.progress, 1)
 	})
 
 	it('doesn\'t increment the level initially', () => {
-		assert.equal(state.level, nextState.level)
+		assert.equal(1, nextState.level)
 	})
 
 	it('generates peep data, and adds is to state', () => {
