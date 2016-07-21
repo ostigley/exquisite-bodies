@@ -4,13 +4,6 @@ import {
 	addBodyPart} from './core.js'
 
 export default function reducer(state = {}, action) {
-  // Figure out which function to call and call it
-  /*
-	start game
-	add player
-	add drawing
-
-*/
   switch(action.type) {
   	case('NEW_GAME'): 
   		return startGame()
@@ -18,5 +11,7 @@ export default function reducer(state = {}, action) {
   		return addPlayer(state)
   	case('ADD_DRAWING'): 
   		return addBodyPart(state, action.body, action.part, action.drawing)
+    default: 
+      return state
   }
 }

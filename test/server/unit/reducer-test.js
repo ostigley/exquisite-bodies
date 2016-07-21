@@ -1,4 +1,4 @@
-import reducer	from '../../../server/reducer.js'
+import reducer	from '../../../server/src/reducer.js'
 import 	{
 	expect,
 	assert}				from 'chai'
@@ -10,7 +10,7 @@ import {
 	import {
 	startGame,
 	addPlayer,
-	addBodyPart}	from '../../../server/core.js'
+	addBodyPart}	from '../../../server/src/core.js'
 
 describe('Reducer START_GAME', () => {
 	const action = {type: 'NEW_GAME'}

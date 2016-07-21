@@ -1,7 +1,7 @@
 import {
 	startGame,
 	addPlayer,
-	addBodyPart}		from '../../../server/core.js'
+	addBodyPart}		from '../../../server/src/core.js'
 import 	{
 	expect,
 	assert}					from 'chai'
