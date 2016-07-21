@@ -13,8 +13,8 @@ import {
 	addBodyPart}	from '../../../server/core.js'
 
 describe('Reducer START_GAME', () => {
-
-	const newGame = startGame()
+	const action = {type: 'NEW_GAME'}
+	const newGame = reducer(null, action)
 	it('returns a frozen / immutable object', () => {
 		assert(Object.isFrozen(newGame), 'it is frozen')
 		assert(Object.isFrozen(newGame.bodies), 'it is frozen')
@@ -22,7 +22,7 @@ describe('Reducer START_GAME', () => {
 		assert(Object.isFrozen(newGame.progress), 'it is frozen')
 		assert(Object.isFrozen(newGame.level), 'it is frozen')
 	})
-	
+
 	it('returns state object with "bodies" Object', () => {
 		expect(Object.keys(newGame.bodies)).to.have.length(3)
 
@@ -53,5 +53,113 @@ describe('Reducer START_GAME', () => {
 	it('returns a player object, with one player', () => {
 		assert.equal(newGame.players.num, 1)
 		assert.equal(newGame.players[1].body, 1)
+	})
+})
+
+
+describe ('Reducer ADD_PLAYER', () => {
+
+	const state = reducer(null,{type: 'NEW_GAME'} )
+	const action = {
+		state: state,
+		type: 'ADD_PLAYER'
+	}
+	const nextState = reducer(state, action)
+	it('returns a frozen / immutable object', () => {
+		assert(Object.isFrozen(nextState), 'it is frozen')
+		assert(Object.isFrozen(nextState.bodies), 'it is frozen')
+		assert(Object.isFrozen(nextState.players), 'it is frozen')
+		assert(Object.isFrozen(nextState.progress), 'it is frozen')
+		assert(Object.isFrozen(nextState.level), 'it is frozen')
+	})
+
+	it('adds a player to the player object', () => {
+		assert.equal(nextState.players.num,2)
+		assert(nextState.players[2])
+		expect(nextState.players[2].body).to.equal(2)
+	})
+
+	it('continues to add players', () => {
+		let state = startGame()
+		state = addPlayer(state)
+		state = addPlayer(state)
+		assert.equal(state.players.num,3)
+		assert(state.players[1])
+		assert(state.players[2])
+		assert(state.players[3])
+		expect(state.players[1].body).to.equal(1)
+		expect(state.players[2].body).to.equal(2)
+		expect(state.players[3].body).to.equal(3)
+	})
+
+		it('wont stops adding players once three have joined', ()=>{
+			let state = startGame()
+			state = addPlayer(state)
+			state = addPlayer(state)
+			state = addPlayer(state)
+			assert.equal(state.players.num,3)
+			assert(state.players[1])
+			assert(state.players[2])
+			assert(state.players[3])
+			expect(state.players[1].body).to.equal(1)
+			expect(state.players[2].body).to.equal(2)
+			expect(state.players[3].body).to.equal(3)
+		})
+
+		it('starts the level when three players have joined', () => {
+			let state = startGame()
+			state = addPlayer(state)
+			state = addPlayer(state)
+			assert(state.level)
+			assert.equal(state.level, 1)
+
+		})
+})
+
+describe('Reducer ADD_DRAWING', () => {
+	const body = 1
+	const part = 'head'
+	const state = addPlayer(addPlayer(startGame()))
+	
+	const action = {
+		type: 'ADD_DRAWING',
+		body: body,
+		part: part,
+		drawing: drawing1
+	}
+	const nextState = reducer(state, action)
+	const content = nextState.bodies[body][part]
+	const peep = nextState.peep[body][part]
+	
+	it('returns a frozen / immutable object', () => {
+		assert(Object.isFrozen(nextState), 'it is frozen')
+		assert(Object.isFrozen(nextState.bodies), 'it is frozen')
+		assert(Object.isFrozen(nextState.players), 'it is frozen')
+		assert(Object.isFrozen(nextState.progress), 'it is frozen')
+		assert(Object.isFrozen(nextState.level), 'it is frozen')
+	})
+
+	it('updates body with a player\'s drawing', () => {
+		expect(content).to.have.length.above(21)
+		assert.equal(content, drawing1)
+	})
+
+	it('increments the progress', () => {
+		assert(nextState.progress)
+		assert.equal(nextState.progress, state.progress+1)
+	})
+
+	it('doesn\'t increment the level initially', () => {
+		assert.equal(state.level, nextState.level)
+	})
+
+	it('generates peep data, and adds is to state', () => {
+		expect(peep).to.have.length.above(21)
+		assert.notEqual(peep, drawing1)
+	})
+
+	it('increments progress to 2', () => {
+		const nextState2 = addBodyPart(nextState, body+1, 'body', drawing1)
+		assert.equal(nextState2.progress, 2)
 	})
 })
