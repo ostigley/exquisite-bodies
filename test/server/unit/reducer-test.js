@@ -1,17 +1,20 @@
-import {
-	startGame,
-	addPlayer,
-	addBodyPart}		from '../../../server/src/core.js'
+import reducer	from '../../../server/src/reducer.js'
 import 	{
 	expect,
-	assert}					from 'chai'
+	assert}				from 'chai'
 import {
 	drawing1, 
 	drawing2, 
-	drawing3}				from '../../helpers/test-drawings.js'
+	drawing3}			from '../../helpers/test-drawings.js'
 
-describe('Application logic for starting a new game ', () => {
-	const newGame = startGame()
+	import {
+	startGame,
+	addPlayer,
+	addBodyPart}	from '../../../server/src/core.js'
+
+describe('Reducer START_GAME', () => {
+	const action = {type: 'NEW_GAME'}
+	const newGame = reducer(null, action)
 	it('returns a frozen / immutable object', () => {
 		assert(Object.isFrozen(newGame), 'it is frozen')
 		assert(Object.isFrozen(newGame.bodies), 'it is frozen')
@@ -20,7 +23,7 @@ describe('Application logic for starting a new game ', () => {
 		assert(Object.isFrozen(newGame.level), 'it is frozen')
 	})
 
-	it('returns an object with "bodies" Object', () => {
+	it('returns state object with "bodies" Object', () => {
 		expect(Object.keys(newGame.bodies)).to.have.length(3)
 
 		for (let num in newGame.bodies) {
@@ -31,7 +34,7 @@ describe('Application logic for starting a new game ', () => {
 		}
 	})
 
-	it('returns an object with peep data', () =>{
+	it('returns state with peep data', () =>{
 		for (let num in newGame.peep) {
 			assert.equal(newGame.peep[num].head, "")
 			assert.equal(newGame.peep[num].body, "")
@@ -43,7 +46,7 @@ describe('Application logic for starting a new game ', () => {
 		expect(newGame.level).to.be.null
 	})
 
-	it('returns a null value for progress because game not started', () =>{
+	it('returns a 0 value for progress because game not started', () =>{
 		expect(newGame.progress).to.be.zero
 	})
 
@@ -53,10 +56,14 @@ describe('Application logic for starting a new game ', () => {
 	})
 })
 
-describe ('Application logic for adding a player', () => {
 
-	const state = startGame()
-	const nextState = addPlayer(state)
+describe ('Reducer ADD_PLAYER', () => {
+
+	const actions = [
+		{type: 'NEW_GAME'},
+		{type: 'ADD_PLAYER'}	
+	]
+	const nextState = actions.reduce(reducer, {})
 	it('returns a frozen / immutable object', () => {
 		assert(Object.isFrozen(nextState), 'it is frozen')
 		assert(Object.isFrozen(nextState.bodies), 'it is frozen')
@@ -108,11 +115,23 @@ describe ('Application logic for adding a player', () => {
 		})
 })
 
-describe('AddBodyPart basic logic', () => {
+describe('Reducer ADD_DRAWING', () => {
 	const body = 1
 	const part = 'head'
-	const state = addPlayer(addPlayer(startGame()))
-	const nextState = addBodyPart(state, body, part, drawing1)
+
+	const actions = [
+		{type: 'NEW_GAME'},
+		{type: 'ADD_PLAYER'},	
+		{type: 'ADD_PLAYER'},
+		{
+			type: 'ADD_DRAWING',
+			body: body,
+			part: part,
+			drawing: drawing1
+		}
+	]
+	const nextState = actions.reduce(reducer, {})
+	
 	const content = nextState.bodies[body][part]
 	const peep = nextState.peep[body][part]
 	
@@ -131,11 +150,11 @@ describe('AddBodyPart basic logic', () => {
 
 	it('increments the progress', () => {
 		assert(nextState.progress)
-		assert.equal(nextState.progress, state.progress+1)
+		assert.equal(nextState.progress, 1)
 	})
 
 	it('doesn\'t increment the level initially', () => {
-		assert.equal(state.level, nextState.level)
+		assert.equal(1, nextState.level)
 	})
 
 	it('generates peep data, and adds is to state', () => {
@@ -148,61 +167,3 @@ describe('AddBodyPart basic logic', () => {
 		assert.equal(nextState2.progress, 2)
 	})
 })
-
-describe('AddBodyPart makes new level ', () => {
-	const body = 1
-	const part = 'head'
-	var nextState = addPlayer(addPlayer(startGame()))
-	
-	for (let i=1 ; i < 4; i ++){
-		nextState = addBodyPart(nextState, i, part, drawing1)
-	}
-	
-	it('increments to level 2', () => {
-		assert.equal(nextState.level, 2)
-	})
-
-	it('increments progress back to zero', () => {
-		assert.equal(nextState.progress, 0)
-	})
-})
-
-describe('AddBodyPart three times, scrambles player bodies', () => {	
-	const parts = ['head', 'body', 'feet']
-	const state = addPlayer(addPlayer(startGame()))
-	const state1 = addBodyPart(state, 1, parts[0], drawing1)
-	const state2 = addBodyPart(state1, 2, parts[0], drawing2)
-	const state3 = addBodyPart(state2, 3, parts[0], drawing3)
-	
-	it('players have another drawing which is not their own', () => {
-		for(let i = 1 ; i < 4; i ++) {
-			assert.notEqual(state3.players[i].body, i)
-		}
-	})
-})
-
-describe('After 9 rounds', () => {
-	const parts = ['head', 'body', 'feet']
-	let state = addPlayer(addPlayer(startGame()))
-	for(let i = 0; i < 3; i++) {
-		for (let k = 1; k < 4; k ++) {
-			state = addBodyPart(state, k, parts[i], drawing1)
-		}
-	}
-	
-	for(let i = 1; i < 4; i++) {
-		it(`each player has their original drawing back: ${i}: ${JSON.stringify(state.players[i])}`, () => {
-			assert.equal(state.players[i].body, i)
-		})
-		
-		it('each body has a final drawing dataURL string', () => {
-			expect(state.bodies[i].final).to.not.be.empty
-		})
-
-		it('each final drawing is a valid dataURL string', () => {
-			expect(state.bodies[i].final).to.contain('data:image/png;base64,')
-		})
-	}
-})
-
-
