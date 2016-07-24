@@ -43,7 +43,8 @@ describe('Reducer START_GAME', () => {
 	})
 
 	it('returns a null value for Level ', ()=> {
-		expect(newGame.level).to.be.null
+		expect(newGame.level.current).to.be.null
+		expect(newGame.level.previous).to.be.null
 	})
 
 	it('returns a 0 value for progress because game not started', () =>{
@@ -109,8 +110,9 @@ describe ('Reducer ADD_PLAYER', () => {
 			let state = startGame()
 			state = addPlayer(state)
 			state = addPlayer(state)
-			assert(state.level)
-			assert.equal(state.level, 1)
+			assert(state.level.current)
+			assert.equal(state.level.current, 1)
+			assert.equal(state.level.previous, null)
 
 		})
 })
@@ -154,7 +156,7 @@ describe('Reducer ADD_DRAWING', () => {
 	})
 
 	it('doesn\'t increment the level initially', () => {
-		assert.equal(1, nextState.level)
+		assert.equal(1, nextState.level.current)
 	})
 
 	it('generates peep data, and adds is to state', () => {

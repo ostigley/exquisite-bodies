@@ -40,7 +40,11 @@ describe('Application logic for starting a new game ', () => {
 	})
 
 	it('returns a null value for Level ', ()=> {
-		expect(newGame.level).to.be.null
+		expect(newGame.level.current).to.be.null
+	})
+
+	it('returns a null value for Level ', ()=> {
+		expect(newGame.level.previous).to.be.null
 	})
 
 	it('returns a null value for progress because game not started', () =>{
@@ -102,8 +106,9 @@ describe ('Application logic for adding a player', () => {
 			let state = startGame()
 			state = addPlayer(state)
 			state = addPlayer(state)
-			assert(state.level)
-			assert.equal(state.level, 1)
+			assert(state.level.current)
+			assert.isNotOk(state.level.previous)
+			assert.equal(state.level.current, 1)
 
 		})
 })
@@ -135,7 +140,8 @@ describe('AddBodyPart basic logic', () => {
 	})
 
 	it('doesn\'t increment the level initially', () => {
-		assert.equal(state.level, nextState.level)
+		assert.equal(state.level.current, nextState.level.current)
+		assert.equal(state.level.previous, nextState.level.previous)
 	})
 
 	it('generates peep data, and adds is to state', () => {
@@ -159,7 +165,8 @@ describe('AddBodyPart makes new level ', () => {
 	}
 	
 	it('increments to level 2', () => {
-		assert.equal(nextState.level, 2)
+		assert.equal(nextState.level.current, 2)
+		assert.equal(nextState.level.previous, 1)
 	})
 
 	it('increments progress back to zero', () => {

@@ -16,8 +16,9 @@ const progress = state => {
 }
 
 const level = state => {
+		const {current} = state.level
 		return  state.progress === 2 
-			? state.level+1
+			? {current: current+1, previous: current}
 			: state.level
 }
 
@@ -44,7 +45,7 @@ export const addPlayer = state => {
 	nextState.players.num = nextPlayer
 	
 	if(nextState.players.num === 3) {
-		nextState.level = 1
+		nextState.level.current = 1
 	}
 
 	return deepFreeze(nextState)
@@ -57,10 +58,10 @@ export const addBodyPart = (state, body, part, drawing) => {
 	nextState.level = level(nextState)
 	nextState.progress = progress(nextState)
 	nextState.peep[body][part] = crop(drawing)
-	nextState.players = nextState.level !== state.level 
+	nextState.players = nextState.level.current !== state.level.current 
 		? scramble(nextState)
 		: nextState.players
-	if (nextState.level === 4) {
+	if (nextState.level.current === 4) {
 		nextState = generateFinal(nextState)
 	}
 	return deepFreeze(nextState)
