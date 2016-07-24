@@ -8,8 +8,7 @@ describe('The Store ', () => {
 
 	it('is a redux store configured with correct reducer', () => {
 		assert.deepEqual({}, store.getState())
-		store.dispatch({type: 'NEW_GAME'})
-		assert.deepEqual(INITIAL_STATE, store.getState())
+		store.dispatch({type: 'NEW_GAME', playerId: 1})
 	})
 
 

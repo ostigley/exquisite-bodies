@@ -32,16 +32,18 @@ const scramble = (state) => {
 	return players
 }
 
-export const startGame = () => {
-	return INITIAL_STATE
+export const startGame = (playerId) => {
+	const nextState = clone(INITIAL_STATE)
+	nextState.players[playerId] = {body: 1}
+	return deepFreeze(nextState)
 }
 
 
-export const addPlayer = state => {
+export const addPlayer = (state, playerId) => {
 	let nextState = clone(state)
 	if (nextState.players.num === 3) return Object.freeze(nextState)
 	const nextPlayer = nextState.players.num+1
-	nextState.players[nextPlayer] = {body: nextPlayer}
+	nextState.players[playerId] = {body: nextPlayer}
 	nextState.players.num = nextPlayer
 	
 	if(nextState.players.num === 3) {

@@ -43,7 +43,6 @@ const INITIAL_STATE = deepFreeze({
 	},
 	progress: 0,
 	players: {
-		1: {body: 1},
 		num: 1
 	}
 })
