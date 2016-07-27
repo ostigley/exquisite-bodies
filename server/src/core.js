@@ -19,15 +19,16 @@ const level = state => {
 		const {current} = state.level
 		return  state.progress === 2 
 			? {current: current+1, previous: current}
-			: state.level
+			: {current: current, previous: current}
 }
 
 const scramble = (state) => {
 	let players = Object.assign({}, state.players)
-	for (let i = 1; i < 4; i++) {
-		players[i] = players[i].body === 3 
+	const ids = Object.keys(players).slice(1,4)
+	for (let i = 0; i < 3; i++) {
+		players[ids[i]] = players[ids[i]].body === 3 
 			? {body: 1} 
-			: {body: players[i].body + 1}
+			: {body: players[ids[i]].body + 1}
 	}
 	return players
 }

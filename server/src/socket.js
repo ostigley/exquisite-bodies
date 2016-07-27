@@ -4,12 +4,18 @@ export const startSocket = (store)  => {
 	const io = new Server().attach(8090)
 	
 	store.subscribe(
-		() => io.emit('state', store.getState())
+		() => {
+			const state = store.getState()
+			if(state.level) {
+				const {current, previous} = state.level
+				if(current !== previous) {
+					io.emit('state', state)
+				}
+			}
+		}
 	)
 
 	io.on('connection', (socket) => {
-		console.log(`User ${socket.id} has joined`)
-
 		if(store.getState().players) {
 			store.dispatch({type: 'ADD_PLAYER', playerId: socket.id})
 		} else {
