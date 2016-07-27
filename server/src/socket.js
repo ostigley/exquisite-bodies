@@ -8,14 +8,12 @@ export const startSocket = (store)  => {
 	)
 
 	io.on('connection', (socket) => {
-		console.log(`User ${socket.id} has joined`, typeof socket.id)
+		console.log(`User ${socket.id} has joined`)
 
 		if(store.getState().players) {
 			store.dispatch({type: 'ADD_PLAYER', playerId: socket.id})
-			console.log(store.getState())
 		} else {
 			store.dispatch({type: 'NEW_GAME', playerId: socket.id})
-			console.log(store.getState())
 		}
 
 		socket.on('action', store.dispatch.bind(store))
