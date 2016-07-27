@@ -24,7 +24,9 @@ const level = state => {
 
 const scramble = (state) => {
 	let players = Object.assign({}, state.players)
-	const ids = Object.keys(players).slice(1,4)
+	// const ids = Object.keys(players).slice(1,4)
+	let ids = Object.keys(players)
+	ids.splice(ids.indexOf('num'), 1)//remove num property
 	for (let i = 0; i < 3; i++) {
 		players[ids[i]] = players[ids[i]].body === 3 
 			? {body: 1} 
