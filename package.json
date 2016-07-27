@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --compilers js:babel-core/register --recursive",
-    "test:watch": "npm run test -- --watch"
+    "start": "babel-node ./server/index.js",
+    "test:unit": "mocha test/server/unit/*.* --compilers js:babel-core/register --watch",
+    "test:integration": "mocha test/server/integration/*.* --compilers js:babel-core/register",
+    "test:all": "mocha test/server/**/*.* --compilers js:babel-core/register"
   },
   "babel": {
     "presets": [
@@ -24,7 +26,10 @@
     "chai": "^3.5.0",
     "clone": "^1.0.2",
     "deep-freeze": "0.0.1",
+    "express": "^4.14.0",
     "mocha": "^2.5.3",
-    "redux": "^3.5.2"
+    "redux": "^3.5.2",
+    "socket.io": "^1.4.8",
+    "socket.io-client": "^1.4.8"
   }
 }

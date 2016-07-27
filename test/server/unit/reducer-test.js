@@ -11,9 +11,9 @@ import {
 	startGame,
 	addPlayer,
 	addBodyPart}	from '../../../server/src/core.js'
-
+const [player1, player2, player3] = [1,2,3]
 describe('Reducer START_GAME', () => {
-	const action = {type: 'NEW_GAME'}
+	const action = {type: 'NEW_GAME', playerId: player1}
 	const newGame = reducer(null, action)
 	it('returns a frozen / immutable object', () => {
 		assert(Object.isFrozen(newGame), 'it is frozen')
@@ -43,7 +43,8 @@ describe('Reducer START_GAME', () => {
 	})
 
 	it('returns a null value for Level ', ()=> {
-		expect(newGame.level).to.be.null
+		expect(newGame.level.current).to.be.null
+		expect(newGame.level.previous).to.be.null
 	})
 
 	it('returns a 0 value for progress because game not started', () =>{
@@ -52,7 +53,7 @@ describe('Reducer START_GAME', () => {
 
 	it('returns a player object, with one player', () => {
 		assert.equal(newGame.players.num, 1)
-		assert.equal(newGame.players[1].body, 1)
+		assert.equal(newGame.players[player1].body, 1)
 	})
 })
 
@@ -60,8 +61,8 @@ describe('Reducer START_GAME', () => {
 describe ('Reducer ADD_PLAYER', () => {
 
 	const actions = [
-		{type: 'NEW_GAME'},
-		{type: 'ADD_PLAYER'}	
+		{type: 'NEW_GAME', playerId: player1},
+		{type: 'ADD_PLAYER', playerId: player2}	
 	]
 	const nextState = actions.reduce(reducer, {})
 	it('returns a frozen / immutable object', () => {
@@ -74,45 +75,10 @@ describe ('Reducer ADD_PLAYER', () => {
 
 	it('adds a player to the player object', () => {
 		assert.equal(nextState.players.num,2)
-		assert(nextState.players[2])
-		expect(nextState.players[2].body).to.equal(2)
+		assert(nextState.players[player2])
+		expect(nextState.players[player2].body).to.equal(2)
 	})
 
-	it('continues to add players', () => {
-		let state = startGame()
-		state = addPlayer(state)
-		state = addPlayer(state)
-		assert.equal(state.players.num,3)
-		assert(state.players[1])
-		assert(state.players[2])
-		assert(state.players[3])
-		expect(state.players[1].body).to.equal(1)
-		expect(state.players[2].body).to.equal(2)
-		expect(state.players[3].body).to.equal(3)
-	})
-
-		it('wont stops adding players once three have joined', ()=>{
-			let state = startGame()
-			state = addPlayer(state)
-			state = addPlayer(state)
-			state = addPlayer(state)
-			assert.equal(state.players.num,3)
-			assert(state.players[1])
-			assert(state.players[2])
-			assert(state.players[3])
-			expect(state.players[1].body).to.equal(1)
-			expect(state.players[2].body).to.equal(2)
-			expect(state.players[3].body).to.equal(3)
-		})
-
-		it('starts the level when three players have joined', () => {
-			let state = startGame()
-			state = addPlayer(state)
-			state = addPlayer(state)
-			assert(state.level)
-			assert.equal(state.level, 1)
-
-		})
 })
 
 describe('Reducer ADD_DRAWING', () => {
@@ -120,9 +86,9 @@ describe('Reducer ADD_DRAWING', () => {
 	const part = 'head'
 
 	const actions = [
-		{type: 'NEW_GAME'},
-		{type: 'ADD_PLAYER'},	
-		{type: 'ADD_PLAYER'},
+		{type: 'NEW_GAME', playerId: player1},
+		{type: 'ADD_PLAYER', playerId: player2},	
+		{type: 'ADD_PLAYER', playerId: player3},
 		{
 			type: 'ADD_DRAWING',
 			body: body,
@@ -154,7 +120,7 @@ describe('Reducer ADD_DRAWING', () => {
 	})
 
 	it('doesn\'t increment the level initially', () => {
-		assert.equal(1, nextState.level)
+		assert.equal(1, nextState.level.current)
 	})
 
 	it('generates peep data, and adds is to state', () => {
