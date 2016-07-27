@@ -25,8 +25,6 @@ describe('New player Socket connection new game ', () => {
 		player1.on('state', (data) => {
 			data.players.should.have.property('/#'+player1.id)
 			assert.equal(data.players.num, 1)
-			player1.emit('action', {type: 'reset'})
-			player1.disconnect()
 			done()
 		})
 
