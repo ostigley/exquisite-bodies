@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "babel-node ./server/index.js",
     "test": "mocha --compilers js:babel-core/register --recursive",
     "test:watch": "npm run test -- --watch"
   },
@@ -24,8 +25,10 @@
     "chai": "^3.5.0",
     "clone": "^1.0.2",
     "deep-freeze": "0.0.1",
+    "express": "^4.14.0",
     "mocha": "^2.5.3",
     "redux": "^3.5.2",
-    "socket.io": "^1.4.8"
+    "socket.io": "^1.4.8",
+    "socket.io-client": "^1.4.8"
   }
 }
