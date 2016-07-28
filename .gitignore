@@ -1,3 +1,8 @@
-node_modules
-test/helpers/*.*
+server/node_modules
+server/test/helpers/*.*
+
+client/node_modules
+client/ios
+client/android
+
 npm-debug.log
