@@ -102,9 +102,9 @@ describe('New players Socket connection new game ', () => {
 						}
 
 						if(data.level.current === 2) {
-							expect(player3.state.peep[1].head).to.contain('data:image/png;base64,')
-							expect(player1.state.peep[2].head).to.contain('data:image/png;base64,')
-							expect(player2.state.peep[3].head).to.contain('data:image/png;base64,')
+							expect(player1.state.peep[1].head).to.contain('data:image/png;base64,')
+							expect(player2.state.peep[2].head).to.contain('data:image/png;base64,')
+							expect(player3.state.peep[3].head).to.contain('data:image/png;base64,')
 							endTest(player1, player2, player3, done)
 						}
 					})
