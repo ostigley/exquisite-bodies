@@ -4,14 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node ./server/index.js",
+    "start": "npm run watch & nodemon ./server/index.js --exec babel-node",
+    "watch": "watchify server/client.js -o public/bundle.js -dv -t babelify",
     "test:unit": "mocha test/server/unit/*.* --compilers js:babel-core/register --watch",
     "test:integration": "mocha test/server/integration/*.* --compilers js:babel-core/register",
     "test:all": "mocha test/server/**/*.* --compilers js:babel-core/register"
   },
   "babel": {
     "presets": [
-      "es2015"
+      "es2015",
+      "react"
+    ]
+  },
+  "browserify": {
+    "transform": [
+      "babelify"
     ]
   },
   "author": "",
@@ -23,13 +30,18 @@
     "canvas": "^1.4.0"
   },
   "dependencies": {
+    "babel-preset-react": "^6.11.1",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.0",
     "chai": "^3.5.0",
     "clone": "^1.0.2",
     "deep-freeze": "0.0.1",
     "express": "^4.14.0",
     "mocha": "^2.5.3",
+    "nodemon": "^1.10.0",
     "redux": "^3.5.2",
     "socket.io": "^1.4.8",
-    "socket.io-client": "^1.4.8"
+    "socket.io-client": "^1.4.8",
+    "watchify": "^3.7.0"
   }
 }
