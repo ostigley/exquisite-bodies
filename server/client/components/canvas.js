@@ -8,7 +8,6 @@ export default class Canvas extends React.Component{
 			if at level 2 or 3, draw 25px of this.state.previos at top of canvas
 
 		*/
-		console.log("component did mount")
 		return this.updateDrawing()
 	}
 
