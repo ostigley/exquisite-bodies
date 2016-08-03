@@ -17,6 +17,7 @@ store.dispatch(setState(INITIAL_STATE))
 const socket = io()
 socket.on('state', state => {
 	store.dispatch(setState(state))
+	console.log(store.getState())
 })
 
 const sendDrawing = data => {
