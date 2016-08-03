@@ -1,3 +1,4 @@
+console.log('hello from canvas functions')
 const canvas = document.querySelectorAll('canvas')
 
 for (i=0; i<canvas.length; i++) {
