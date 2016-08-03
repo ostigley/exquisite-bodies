@@ -2,17 +2,21 @@
 
 import React 					from 'react'
 import ReactDOM 			from 'react-dom'
-import PageContainer 	from './components/page-container.js'
+import {PageContainer} 	from './components/page-container.js'
 import io  						from 'socket.io-client'
+import App						from './components/app.js'
+import {Provider}			from 'react-redux'
+import {createStore}	from 'redux'
+import reducer 				from './reducer'
+import {setState}			from './action-creators.js'
+import {INITIAL_STATE}from '../server/src/new-game.js'
 
-
-// const store = createStore(reducer)
-var state = {}
+const store = createStore(reducer)
+store.dispatch(setState(INITIAL_STATE))
 
 const socket = io()
-socket.on('state', data => {
-	state = data
-	console.log(state)
+socket.on('state', state => {
+	store.dispatch(setState(state))
 })
 
 const sendDrawing = data => {
@@ -28,11 +32,9 @@ const sendDrawing = data => {
 	socket.emit('action', action)
 }
 
-const render = () => {
-	ReactDOM.render(
-			<PageContainer sendDrawing={sendDrawing} state={state}/>,
-		document.querySelector('#eq')
-	)
-}
-
-render()
+ReactDOM.render(
+	<Provider store={store}>
+		<PageContainer sendDrawing={sendDrawing} />
+	</Provider>,
+	document.querySelector('#eq')
+)

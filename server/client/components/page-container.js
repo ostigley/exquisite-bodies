@@ -1,14 +1,11 @@
 import React, { Component } from 'react'
 import Section from './section.js'
-
-
-
+import {connect} from 'react-redux'
+import {App} from './app.js'
+import * as actionCreators from '../action-creators.js'
 var canvasCount = 1
 
-
-
-
-module.exports = React.createClass({
+const Page =  React.createClass({
 
     drawImage (canvas, data) { 
       this.setState(data)
@@ -21,16 +18,25 @@ module.exports = React.createClass({
 
     render() {
       const location = 1
-    	return (
-			<main className="container">
-    		<h1>hiddenDoodle</h1>
-     		 	<Section id={1} buttonClick={this.buttonClick} peep={location.peep} drawing={location.current}/>
-    		
-  		</main>
-  		)
+      if (!this.props.level) {
+       return (<App/>) 
+      } else {
+        return (
+          <main className="container">
+            <h1>hiddenDoodle</h1>
+            <Section id={1} buttonClick={this.buttonClick} peep={location.peep} drawing={location.current}/>
+          </main>)
+      }
     }
 })
 
+const mapStateToProps = (state) => {
+  return {
+    level: state.level.current
+  }
+}
 
-
-
+export const PageContainer = connect(
+  mapStateToProps,
+  actionCreators
+)(Page)
