@@ -6,3 +6,4 @@ client/ios
 client/android
 
 npm-debug.log
+server/client/public/bundle.js

@@ -1,0 +1,30 @@
+main {
+  text-align: center;
+}
+
+canvas {
+  border: .5px solid #aaa;
+  box-shadow: 5px 5px 5px #aaa;
+  cursor: pointer;
+	
+}
+
+button {
+  color: black;
+  background-color: white;
+  font-size: 14px;
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid black;
+  border-radius: 4px;
+}
+
+#cover-1 {
+  position: absolute;
+  margin-left: 350px;
+  top: 60px;
+  background-color: white;
+  width: 800px;
+  height: 550px;
+  z-index: -1;
+}
