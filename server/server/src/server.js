@@ -18,7 +18,9 @@ export const startServer  = (store) => {
 			store.dispatch({type: 'NEW_GAME', playerId: socket.id})
 		}
 
-		socket.on('action', store.dispatch.bind(store))
+		socket.on('action', (action) => {
+			store.dispatch(action)
+		})
 
 	})
 	
@@ -29,9 +31,6 @@ export const startServer  = (store) => {
 			if(current === null || current !== previous) {
 				io.emit('state', state)
 			}
-			// if(current && current !== previous) {
-			// 		io.emit('state', state)
-			// }
 		}
 	)
 

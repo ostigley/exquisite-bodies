@@ -25,6 +25,7 @@ export class Button extends Component {
 	}
 
 	handleClick () {
+		console.log('handleclick in button')
 		const canvas = document.querySelector('canvas').toDataURL()
 		
 		this.props.sendDrawing(canvas)
@@ -33,7 +34,7 @@ export class Button extends Component {
 	render () {
 		return (
 			<div>
-	      <button onClick={() => this.handleClick}>Submit</button>
+	      <button onClick={() => this.handleClick()}>Submit</button>
       </div>
 			)
 	}
