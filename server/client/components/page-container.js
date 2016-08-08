@@ -19,7 +19,7 @@ const Page =  React.createClass({
         return (
           <main className="container">
             <h1>hiddenDoodle</h1>
-            <Section id={1} sendDrawing={this.props.sendDrawing} peep={location.peep} drawing={location.current}/>
+            <Section id={1} sendDrawing={this.props.sendDrawing} peep={this.props.peep} drawing={location.current}/>
           </main>)
       }
     }
@@ -27,7 +27,8 @@ const Page =  React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    level: state.level.current
+    level: state.level.current,
+    peep: state.peep
   }
 }
 
