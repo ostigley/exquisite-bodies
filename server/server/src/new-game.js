@@ -5,36 +5,22 @@ const INITIAL_STATE = deepFreeze({
 			head: "",
 			body: "",
 			feet: "",
+			peep: "",
 			final: ""
 		},
 		2: {
 			head: "",
 			body: "",
 			feet: "",
+			peep: "",
 			final: ""
 		},
 		3: {
 			head: "",
 			body: "",
 			feet: "",
+			peep: "",
 			final: ""
-		}
-	},
-	peep: {
-		1: {
-			head: "",
-			body: "",
-			feet: ""
-		},
-		2: {
-			head: "",
-			body: "",
-			feet: ""
-		},
-		3: {
-			head: "",
-			body: "",
-			feet: ""
 		}
 	},
 	level: {

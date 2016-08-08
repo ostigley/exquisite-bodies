@@ -29,14 +29,7 @@ describe('Application logic for starting a new game ', () => {
 			assert.equal(newGame.bodies[num].body, "")
 			assert.equal(newGame.bodies[num].feet, "")
 			assert.equal(newGame.bodies[num].final, "")
-		}
-	})
-
-	it('returns an object with peep data', () =>{
-		for (let num in newGame.peep) {
-			assert.equal(newGame.peep[num].head, "")
-			assert.equal(newGame.peep[num].body, "")
-			assert.equal(newGame.peep[num].feet, "")
+			assert.equal(newGame.bodies[num].peep, "")
 		}
 	})
 
@@ -124,7 +117,7 @@ describe('AddBodyPart basic logic', () => {
 	const state = addPlayer(addPlayer(startGame(player1), player2), player3)
 	const nextState = addBodyPart(state, body, part, drawing1)
 	const content = nextState.bodies[body][part]
-	const peep = nextState.peep[body][part]
+	const peep = nextState.bodies[body].peep
 	
 	it('returns a frozen / immutable object', () => {
 		assert(Object.isFrozen(nextState), 'it is frozen')
@@ -146,7 +139,6 @@ describe('AddBodyPart basic logic', () => {
 
 	it('doesn\'t increment the level initially', () => {
 		assert.equal(state.level.current, nextState.level.current)
-		// assert.equal(nextState.level.previous, nextState.level.previous)
 	})
 
 	it('generates peep data, and adds is to state', () => {

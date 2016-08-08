@@ -62,7 +62,7 @@ export const addBodyPart = (state, body, part, drawing) => {
 	nextState.bodies[body][part] = drawing
 	nextState.level = level(nextState)
 	nextState.progress = progress(nextState)
-	nextState.peep[body][part] = crop(drawing)
+	nextState.bodies[body].peep = crop(drawing)
 	nextState.players = nextState.level.current !== state.level.current 
 		? scramble(nextState)
 		: nextState.players
