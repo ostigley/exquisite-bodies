@@ -22,17 +22,25 @@ export const startServer  = (store) => {
 			store.dispatch(action)
 		})
 
+
+
 	})
 	
 	store.subscribe(
 		() => {
+			// const player = socket.id
 			const state = store.getState()
 			const {current, previous} = state.level
 			if(current === null || current !== previous) {
-				io.emit('state', state)
+				// io.emit('state', state.send(player))
+			const sockets = io.sockets.connected
+			for(let socket in sockets) {
+				sockets[socket].emit('state', state.send(socket))
+			}
 			}
 		}
 	)
+	
 
 	http.listen(3000, function(){
 	  console.log('listening on *:3000');

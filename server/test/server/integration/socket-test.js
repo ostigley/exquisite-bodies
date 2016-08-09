@@ -14,7 +14,7 @@ import {makeStore} 				from '../../../server/src/store.js'
 import {startSocket}	 		from '../../../server/src/socket.js'
 
 const store = makeStore()
-const socketURL = 'http://localhost:8090'
+const socketURL = 'http://localhost:3000'
 startSocket(store)
 store.dispatch({type: ''})
 ////////
@@ -39,11 +39,10 @@ describe('New players Socket connection new game ', () => {
 			player2.on('connect', () => {
 
 				player1.on('state', (data) => {
-					data.players.should.have.property('/#'+player1.id)
+					data.should.have.property(level)
+					data.should.have.property(body)
 					/***********/
-					assert.equal(data.players.num, 2)
-					assert.isNotOk(data.level.previous)
-					assert.isNotOk(data.level.current)
+					assert.isNotOk(data.level)
 					/***********/
 				})
 

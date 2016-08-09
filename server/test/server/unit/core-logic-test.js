@@ -119,6 +119,14 @@ describe('AddBodyPart basic logic', () => {
 	const content = nextState.bodies[body][part]
 	const peep = nextState.bodies[body].peep
 	
+	//test here for player.send() function
+	it('uses the player.send function properly', () => {
+		const data = nextState.send(1)
+		assert.equal(data.level, 1)
+		expect(data.body.head).to.have.length.above(21)
+		expect(data.body.peep).to.have.length.above(21)
+	})
+
 	it('returns a frozen / immutable object', () => {
 		assert(Object.isFrozen(nextState), 'it is frozen')
 		assert(Object.isFrozen(nextState.bodies), 'it is frozen')

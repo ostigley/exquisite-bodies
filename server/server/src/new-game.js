@@ -29,7 +29,14 @@ const INITIAL_STATE = deepFreeze({
 	},
 	progress: 0,
 	players: {
-		num: 1
+		num: 1,
+	},
+	send: function (id) {
+		return {
+			level: this.level.current,
+			body: this.bodies[this.players[id].body],
+			num: this.players[id].body
+		}
 	}
 })
 export {INITIAL_STATE}

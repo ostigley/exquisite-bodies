@@ -27,8 +27,8 @@ const Page =  React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    level: state.level.current,
-    peep: state.peep
+    level: state.level,
+    peep: state.body.peep
   }
 }
 
