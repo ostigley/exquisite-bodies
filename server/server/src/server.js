@@ -13,7 +13,6 @@ export const startServer  = (store) => {
 	io.on('connection', (socket) => {
 		if(store.getState().players) {
 			store.dispatch({type: 'ADD_PLAYER', playerId: socket.id})
-			// socket.emit('state',store.getState())
 		} else {
 			store.dispatch({type: 'NEW_GAME', playerId: socket.id})
 		}
@@ -22,21 +21,19 @@ export const startServer  = (store) => {
 			store.dispatch(action)
 		})
 
-
-
 	})
 	
 	store.subscribe(
 		() => {
-			// const player = socket.id
 			const state = store.getState()
+			state.send.bind(state)
 			const {current, previous} = state.level
 			if(current === null || current !== previous) {
-				// io.emit('state', state.send(player))
-			const sockets = io.sockets.connected
-			for(let socket in sockets) {
-				sockets[socket].emit('state', state.send(socket))
-			}
+				const sockets = io.sockets.connected
+				console.log(state.players)
+				for(let socket in sockets) {
+					sockets[socket].emit('state', state.send(socket))
+				}
 			}
 		}
 	)

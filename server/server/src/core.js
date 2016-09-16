@@ -23,14 +23,16 @@ const level = state => {
 }
 
 const scramble = (state) => {
+	console.log('scramble called')
 	let players = Object.assign({}, state.players)
 	// const ids = Object.keys(players).slice(1,4)
 	let ids = Object.keys(players)
 	ids.splice(ids.indexOf('num'), 1)//remove num property
 	for (let i = 0; i < 3; i++) {
-		players[ids[i]] = players[ids[i]].body === 3 
-			? {body: 1} 
-			: {body: players[ids[i]].body + 1}
+		players[ids[i]] = 
+			players[ids[i]].body == 3
+				? {body: 1} 
+				: {body: players[ids[i]].body + 1}
 	}
 	return players
 }
@@ -56,13 +58,15 @@ export const addPlayer = (state, playerId) => {
 	return deepFreeze(nextState)
 }
 
-export const addBodyPart = (state, body, part, drawing) => {
+export const addBodyPart = (state, b, part, drawing) => {
 	let nextState = clone(state)
+	const cropped = crop(drawing)
 
-	nextState.bodies[body][part] = drawing
-	nextState.level = level(nextState)
-	nextState.progress = progress(nextState)
-	nextState.bodies[body].peep = crop(drawing)
+	nextState.bodies[b][part] = drawing
+	nextState.bodies[b].peep = cropped
+	
+	nextState.progress = progress(state)
+	nextState.level = level(state)
 	nextState.players = nextState.level.current !== state.level.current 
 		? scramble(nextState)
 		: nextState.players

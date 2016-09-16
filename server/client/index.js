@@ -32,7 +32,7 @@ socket.on('connect', () => {
 
 socket.on('state', state => {
 	store.dispatch(setState(state))
-	console.log(state)
+	console.log(state.num)
 })
 
 
@@ -47,6 +47,7 @@ const sendDrawing = data => {
 		part: parts[state.level],
 		drawing: data
 	}
+	console.log(data)
 	socket.emit('action', action)
 }
 
