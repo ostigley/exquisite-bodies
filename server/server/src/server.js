@@ -11,10 +11,12 @@ export const startServer  = (store) => {
 	});
 
 	io.on('connection', (socket) => {
+		
 		if(store.getState().players) {
 			store.dispatch({type: 'ADD_PLAYER', playerId: socket.id})
 		} else {
 			store.dispatch({type: 'NEW_GAME', playerId: socket.id})
+			games
 		}
 
 		socket.on('action', (action) => {
@@ -39,12 +41,43 @@ export const startServer  = (store) => {
 			}
 		}
 	)
-	
 
 	http.listen(3000, function(){
 	  console.log('listening on *:3000');
 	});
-
-
 } 
+
+import {makeStore} 	from './store.js'
+
+const newGame() => {
+	let store = makeStore()
+	store.dispatch({type: ''})
+	return {store}
+}
+const GAMEMANAGER = () => {
+	let gameFloor = {
+		nextGameId: 1
+	}
+
+	return Object.assign(
+		{},
+		newPlayer(gameFloor),
+		removePlayer(gameFloor),
+		updateGame(gameFloor),
+	)	
+}
+
+const newPlayer(gameFloor) => {
+	// check if need to change nextGameId if game is full
+	return {
+		add: (socketId) => gameFloor[nextGameId].dispatch{
+			type: 'ADD_PLAYER', 
+			playerId: socketId
+	}
+}
+
+
+
+
+
 
