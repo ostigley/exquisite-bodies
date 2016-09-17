@@ -2,39 +2,25 @@ import deepFreeze from 'deep-freeze'
 const INITIAL_STATE = deepFreeze({
 	bodies: {
 		1: {
-			head: "",
-			body: "",
-			feet: "",
-			final: ""
+			head: '',
+			body: '',
+			feet: '',
+			peep: '',
+			final: ''
 		},
 		2: {
-			head: "",
-			body: "",
-			feet: "",
-			final: ""
+			head: '',
+			body: '',
+			feet: '',
+			peep: '',
+			final: ''
 		},
 		3: {
-			head: "",
-			body: "",
-			feet: "",
-			final: ""
-		}
-	},
-	peep: {
-		1: {
-			head: "",
-			body: "",
-			feet: ""
-		},
-		2: {
-			head: "",
-			body: "",
-			feet: ""
-		},
-		3: {
-			head: "",
-			body: "",
-			feet: ""
+			head: '',
+			body: '',
+			feet: '',
+			peep: '',
+			final: ''
 		}
 	},
 	level: {
@@ -43,7 +29,14 @@ const INITIAL_STATE = deepFreeze({
 	},
 	progress: 0,
 	players: {
-		num: 1
+		num: 1,
+	},
+	send: function (id) {
+		return {
+			level: this.level.current,
+			body: this.bodies[this.players[id].body],
+			num: this.players[id].body
+		}
 	}
 })
 export {INITIAL_STATE}

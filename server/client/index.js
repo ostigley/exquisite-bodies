@@ -12,13 +12,30 @@ import {setState}			from './action-creators.js'
 import {INITIAL_STATE}from '../server/src/new-game.js'
 
 const store = createStore(reducer)
-store.dispatch(setState(INITIAL_STATE))
+store.dispatch(setState({
+	level: null,
+	body: {peep: null}
+}))
 
 const socket = io()
+
+socket.on('connect', () => {
+
+	ReactDOM.render(
+		<Provider store={store}>
+			<PageContainer sendDrawing={sendDrawing} />
+		</Provider>,
+		document.querySelector('#eq')
+	)
+
+})
+
 socket.on('state', state => {
 	store.dispatch(setState(state))
-	console.log(store.getState())
+	console.log(state.num)
 })
+
+
 
 const sendDrawing = data => {
 	const state = store.getState()
@@ -26,16 +43,11 @@ const sendDrawing = data => {
 
 	const action = {
 		type: 'ADD_DRAWING',
-		body: state.players['/#'+socket.id].body,
-		part: parts[state.level.current],
+		body: state.num,
+		part: parts[state.level],
 		drawing: data
 	}
+	console.log(data)
 	socket.emit('action', action)
 }
 
-ReactDOM.render(
-	<Provider store={store}>
-		<PageContainer sendDrawing={sendDrawing} />
-	</Provider>,
-	document.querySelector('#eq')
-)

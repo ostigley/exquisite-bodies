@@ -30,15 +30,8 @@ describe('Reducer START_GAME', () => {
 			assert.equal(newGame.bodies[num].head, "")
 			assert.equal(newGame.bodies[num].body, "")
 			assert.equal(newGame.bodies[num].feet, "")
+			assert.equal(newGame.bodies[num].peep, "")
 			assert.equal(newGame.bodies[num].final, "")
-		}
-	})
-
-	it('returns state with peep data', () =>{
-		for (let num in newGame.peep) {
-			assert.equal(newGame.peep[num].head, "")
-			assert.equal(newGame.peep[num].body, "")
-			assert.equal(newGame.peep[num].feet, "")
 		}
 	})
 
@@ -99,7 +92,7 @@ describe('Reducer ADD_DRAWING', () => {
 	const nextState = actions.reduce(reducer, {})
 	
 	const content = nextState.bodies[body][part]
-	const peep = nextState.peep[body][part]
+	const peep = nextState.bodies[body].peep
 	
 	it('returns a frozen / immutable object', () => {
 		assert(Object.isFrozen(nextState), 'it is frozen')

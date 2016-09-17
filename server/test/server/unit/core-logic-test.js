@@ -1,3 +1,5 @@
+import fs from 'fs'
+import crop 					from '../../../server/src/image-functions/crop.js'
 import {
 	startGame,
 	addPlayer,
@@ -8,7 +10,12 @@ import 	{
 import {
 	drawing1, 
 	drawing2, 
-	drawing3}				from '../../helpers/test-drawings.js'
+	drawing3,				
+	drawing4,				
+	drawing5,				
+	drawing6}				from '../../helpers/test-drawings.js'
+
+import {INITIAL_STATE} from '../../../server/src/new-game.js'
 
 describe('Application logic for starting a new game ', () => {
 	const playerId = 123
@@ -16,28 +23,11 @@ describe('Application logic for starting a new game ', () => {
 	it('returns a frozen / immutable object', () => {
 		assert(Object.isFrozen(newGame), 'it is frozen')
 		assert(Object.isFrozen(newGame.bodies), 'it is frozen')
-		assert(Object.isFrozen(newGame.players), 'it is frozen')
-		assert(Object.isFrozen(newGame.progress), 'it is frozen')
-		assert(Object.isFrozen(newGame.level), 'it is frozen')
 	})
 
 	it('returns an object with "bodies" Object', () => {
 		expect(Object.keys(newGame.bodies)).to.have.length(3)
-
-		for (let num in newGame.bodies) {
-			assert.equal(newGame.bodies[num].head, "")
-			assert.equal(newGame.bodies[num].body, "")
-			assert.equal(newGame.bodies[num].feet, "")
-			assert.equal(newGame.bodies[num].final, "")
-		}
-	})
-
-	it('returns an object with peep data', () =>{
-		for (let num in newGame.peep) {
-			assert.equal(newGame.peep[num].head, "")
-			assert.equal(newGame.peep[num].body, "")
-			assert.equal(newGame.peep[num].feet, "")
-		}
+		assert.deepEqual(newGame.bodies, INITIAL_STATE.bodies)
 	})
 
 	it('returns a null value for Level ', ()=> {
@@ -59,62 +49,42 @@ describe('Application logic for starting a new game ', () => {
 })
 
 describe ('Application logic for adding a player', () => {
-	const [player1, player2] = [1,2]
-	const state = startGame(player1)
-	const nextState = addPlayer(state, player2)
+	const [player1, player2, player3, player4] = [1,2,3,4]
+	const state0 = startGame(player1)
+	const nextState = addPlayer(state0, player2)
+
 	it('returns a frozen / immutable object', () => {
 		assert(Object.isFrozen(nextState), 'it is frozen')
-		assert(Object.isFrozen(nextState.bodies), 'it is frozen')
-		assert(Object.isFrozen(nextState.players), 'it is frozen')
-		assert(Object.isFrozen(nextState.progress), 'it is frozen')
-		assert(Object.isFrozen(nextState.level), 'it is frozen')
 	})
 
 	it('adds a player to the player object', () => {
 		assert.equal(nextState.players.num,2)
-		assert(nextState.players[player2])
 		expect(nextState.players[player2].body).to.equal(2)
 	})
 
 	it('continues to add players', () => {
-		let [player1, player2, player3] = [1,2,3]
-		let state = startGame(player1)
-		state = addPlayer(state, player2)
+		let state = addPlayer(state0, player2)
 		state = addPlayer(state, player3)
 		assert.equal(state.players.num,3)
-		assert(state.players[player1])
-		assert(state.players[player2])
-		assert(state.players[player3])
 		expect(state.players[player1].body).to.equal(1)
 		expect(state.players[player2].body).to.equal(2)
 		expect(state.players[player3].body).to.equal(3)
 	})
 
-		it('wont stops adding players once three have joined', ()=>{
-			let [player1, player2, player3, player4] = [1,2,3,4]
-			let state = startGame(player1)
-			state = addPlayer(state, player2)
-			state = addPlayer(state, player3)
-			state = addPlayer(state, player4)
-			assert.equal(state.players.num,3)
-			assert(state.players[player1])
-			assert(state.players[player2])
-			assert(state.players[player3])
-			expect(state.players[player1].body).to.equal(1)
-			expect(state.players[player2].body).to.equal(2)
-			expect(state.players[player3].body).to.equal(3)
-		})
+	it('will stop adding players once three have joined', ()=>{
+		let state = addPlayer(state0, player2)
+		state = addPlayer(state, player3)
+		state = addPlayer(state, player4)
 
-		it('starts the level when three players have joined', () => {
-			let [player1, player2, player3] = [1,2,3]
-			let state = startGame(player1)
-			state = addPlayer(state, player2)
-			state = addPlayer(state, player3)
-			assert(state.level.current)
-			assert.isNotOk(state.level.previous)
-			assert.equal(state.level.current, 1)
+		expect(state.players[player4]).to.be.undefined
+	})
 
-		})
+	it('starts the level when three players have joined', () => {
+		let state = addPlayer(state0, player2)
+		state = addPlayer(state, player3)
+
+		assert.equal(state.level.current, 1)
+	})
 })
 
 describe('AddBodyPart basic logic', () => {
@@ -124,14 +94,15 @@ describe('AddBodyPart basic logic', () => {
 	const state = addPlayer(addPlayer(startGame(player1), player2), player3)
 	const nextState = addBodyPart(state, body, part, drawing1)
 	const content = nextState.bodies[body][part]
-	const peep = nextState.peep[body][part]
+	const peep = nextState.bodies[body].peep
 	
-	it('returns a frozen / immutable object', () => {
-		assert(Object.isFrozen(nextState), 'it is frozen')
-		assert(Object.isFrozen(nextState.bodies), 'it is frozen')
-		assert(Object.isFrozen(nextState.players), 'it is frozen')
-		assert(Object.isFrozen(nextState.progress), 'it is frozen')
-		assert(Object.isFrozen(nextState.level), 'it is frozen')
+	describe('The send function', () => {
+		it('returns the correct object propertys', () => {
+			const data = nextState.send(1)
+			assert.equal(data.level, 1)
+			expect(data.body.head).to.have.length.above(21)
+			expect(data.body.peep).to.have.length.above(21)
+		})
 	})
 
 	it('updates body with a player\'s drawing', () => {
@@ -146,7 +117,6 @@ describe('AddBodyPart basic logic', () => {
 
 	it('doesn\'t increment the level initially', () => {
 		assert.equal(state.level.current, nextState.level.current)
-		// assert.equal(nextState.level.previous, nextState.level.previous)
 	})
 
 	it('generates peep data, and adds is to state', () => {
@@ -180,19 +150,72 @@ describe('AddBodyPart makes new level ', () => {
 	})
 })
 
-describe('AddBodyPart three times, scrambles player bodies', () => {	
+describe('Adding a body part has an effect on state.players', () => {	
 	const [player1, player2, player3] = [1,2,3]
 	const parts = ['head', 'body', 'feet']
 	const state = addPlayer(addPlayer(startGame(player1), player2), player3)
-	const state1 = addBodyPart(state, 1, parts[0], drawing1)
-	const state2 = addBodyPart(state1, 2, parts[0], drawing2)
-	const state3 = addBodyPart(state2, 3, parts[0], drawing3)
-	
-	it('players have another drawing which is not their own', () => {
-		for(let i = 1 ; i < 4; i ++) {
-			assert.notEqual(state3.players[i].body, i)
-		}
+	const state1 = addBodyPart(state,  "1", 'head', drawing1)
+	const state2 = addBodyPart(state1, "2",'head' , drawing2)
+	const state3 = addBodyPart(state2, "3",'head' , drawing3)
+	const state4 = addBodyPart(state3, "1",'body' , drawing4)
+	const state5 = addBodyPart(state4, "2",'body' , drawing5)
+	const state6 = addBodyPart(state5, "3",'body' , drawing6)
+
+	it('does not change the player state after one drawing', () => {
+		assert.deepEqual(state.players, state2.players)
 	})
+
+	it('does not change the player state after after 2 drawings', () => {
+		assert.deepEqual(state1.players, state2.players)
+	})
+
+	it('DOES change the player state after after 3 drawings', () => {
+		assert.notDeepEqual(state2.players, state3.players)
+	})	
+
+	it('does not change the player state after 4 drawings', () => {
+		assert.deepEqual(state3.players, state4.players)
+	})	
+
+	it('does not change the player state  after 5 drawings', () => {
+		assert.deepEqual(state4.players, state5.players)
+	})	
+
+	it('does scramble after 6 drawings', () => {
+		assert.notDeepEqual(state5.players, state6.players)
+	})
+
+	it('has no peep on game begnining', () => {
+		expect(state.bodies[1].peep).to.equal('')
+	})
+
+	describe('Adding a body part', () => {
+		it('after 1 round, updates a body peep value', ()=>{
+			assert.notEqual(state.bodies[1].peep, state1.bodies[1].peep)
+		})
+
+		it('after 2 round, updates a body peep value', ()=>{
+			assert.notEqual(state1.bodies[2].peep, state2.bodies[2].peep)
+		})
+
+		it('after 3 rounds, updates a body peep value', ()=>{
+			assert.notEqual(state2.bodies[3].peep, state3.bodies[3].peep)
+		})
+
+		it('after 4 rounds, updates a body peep value', ()=>{
+			assert.notEqual(state3.bodies[1].peep, state4.bodies[1].peep)
+		})
+
+		it('after 5 rounds, updates a body peep value', ()=>{
+			assert.notEqual(state4.bodies[2].peep, state5.bodies[2].peep)
+		})
+
+		it('after 6 rounds, updates a body peep value', ()=>{
+			assert.notEqual(state5.bodies[3].peep, state6.bodies[3].peep)
+		})
+
+	})
+
 })
 
 describe('After 9 rounds', () => {
@@ -219,5 +242,3 @@ describe('After 9 rounds', () => {
 		})
 	}
 })
-
-

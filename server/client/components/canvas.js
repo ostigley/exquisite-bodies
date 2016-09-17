@@ -7,11 +7,10 @@ export default class Canvas extends React.Component{
 		
 	}
 
-
 	render () {
 		return (
 			<div>
-				<img src={this.props.peep[1].head}/>
+				<img src={this.props.peep}/>
 				<canvas 
 					id={this.props.id} 
 					width="700px" 
