@@ -15,10 +15,12 @@ const Page =  React.createClass({
       const location = 1
       if (!this.props.level) {
        return (<App/>) 
+      } else if (this.props.level === 4) {
+        return (
+          <img className="final-image" src={this.props.final}/>)
       } else {
         return (
           <main className="container">
-            <h1>hiddenDoodle</h1>
             <Section id={1} sendDrawing={this.props.sendDrawing} peep={this.props.peep} drawing={location.current}/>
           </main>)
       }
@@ -28,7 +30,8 @@ const Page =  React.createClass({
 const mapStateToProps = (state) => {
   return {
     level: state.level,
-    peep: state.body.peep
+    peep: state.body.peep,
+    final: state.body.final
   }
 }
 

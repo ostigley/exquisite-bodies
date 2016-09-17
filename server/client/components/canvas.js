@@ -7,7 +7,6 @@ export default class Canvas extends React.Component{
 		
 	}
 
-
 	render () {
 		return (
 			<div>

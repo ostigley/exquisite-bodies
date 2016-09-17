@@ -23,9 +23,7 @@ const level = state => {
 }
 
 const scramble = (state) => {
-	console.log('scramble called')
 	let players = Object.assign({}, state.players)
-	// const ids = Object.keys(players).slice(1,4)
 	let ids = Object.keys(players)
 	ids.splice(ids.indexOf('num'), 1)//remove num property
 	for (let i = 0; i < 3; i++) {
@@ -61,12 +59,15 @@ export const addPlayer = (state, playerId) => {
 export const addBodyPart = (state, b, part, drawing) => {
 	let nextState = clone(state)
 	const cropped = crop(drawing)
-
+	//add drawing data
 	nextState.bodies[b][part] = drawing
 	nextState.bodies[b].peep = cropped
 	
+	//update game level and progress
 	nextState.progress = progress(state)
 	nextState.level = level(state)
+	
+	//scramble player body if necessary
 	nextState.players = nextState.level.current !== state.level.current 
 		? scramble(nextState)
 		: nextState.players

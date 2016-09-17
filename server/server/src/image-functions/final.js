@@ -1,4 +1,5 @@
 import Canvas, {Image} from 'canvas'
+
 export default (state, width = 700, height = 1200) => {
 	let nextState = Object.assign({}, state)
 	const parts = ['head', 'body', 'feet']
@@ -9,7 +10,7 @@ export default (state, width = 700, height = 1200) => {
 		const ctx = canvas.getContext('2d')
 
 		parts.map( (part, i) => {
-			const imageObj = new Image;
+			const imageObj = new Image
 			const dx = 0
 			const dy = i*height/3
 			imageObj.src = body[part]

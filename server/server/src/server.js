@@ -1,11 +1,11 @@
 import express from 'express'
+const path = require('path');
 const app = express()
 
 export const startServer  = (store) => {
 	var http = require('http').Server(app);
 	var io = require('socket.io')(http);
-	app.use(express.static('/Users/Olly/workspace/exquisite-bodies/server/client/public'))
-
+	app.use(express.static(path.join(__dirname,'../../client/public')))
 	app.get('/', function(req, res){
 	  res.sendfile('index.html');
 	});
