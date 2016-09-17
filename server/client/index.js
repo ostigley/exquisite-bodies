@@ -47,7 +47,6 @@ const sendDrawing = data => {
 		part: parts[state.level],
 		drawing: data
 	}
-	console.log(data)
 	socket.emit('action', action)
 }
 
