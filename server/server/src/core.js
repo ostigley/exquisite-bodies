@@ -56,6 +56,19 @@ export const addPlayer = (state, playerId) => {
 	return deepFreeze(nextState)
 }
 
+export const removePlayer = (state, playerId) => {
+	let nextState = clone(state)
+	const nextPlayer = nextState.players.num+1
+	
+	nextState.bodies= INITIAL_STATE.bodies
+	delete nextState.players[playerId];
+	nextState.players.num--
+	
+	[nextState.level.current, nextState.level.previous] = [null, null]
+
+	return deepFreeze(nextState)
+}
+
 export const addBodyPart = (state, b, part, drawing) => {
 	let nextState = clone(state)
 	const cropped = crop(drawing)
