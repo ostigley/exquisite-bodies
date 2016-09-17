@@ -11,6 +11,9 @@ import {
 	startGame,
 	addPlayer,
 	addBodyPart}	from '../../../server/src/core.js'
+import {INITIAL_STATE} from '../../../server/src/new-game.js'
+
+
 const [player1, player2, player3] = [1,2,3]
 describe('Reducer START_GAME', () => {
 	const action = {type: 'NEW_GAME', playerId: player1}
@@ -70,6 +73,31 @@ describe ('Reducer ADD_PLAYER', () => {
 		assert.equal(nextState.players.num,2)
 		assert(nextState.players[player2])
 		expect(nextState.players[player2].body).to.equal(2)
+	})
+
+})
+
+describe ('Reducer REMOVE_PLAYER', () => {
+	const actions = [
+		{type: 'NEW_GAME', playerId: player1},
+		{type: 'ADD_PLAYER', playerId: player2},	
+		{type: 'ADD_PLAYER', playerId: player3},	
+		{type: 'REMOVE_PLAYER', playerId: player3}	
+	]
+	const nextState = actions.reduce(reducer, {})
+
+	it('returns state to rolls back state . players', () => {
+		assert.equal(nextState.players.num, 2)
+		expect(nextState.players[3]).to.be.undefined
+	})
+
+	it('rolls back current and previous levels', () => {
+		expect(nextState.level.current).to.be.null
+		expect(nextState.level.previous).to.be.null
+	})
+
+	it('rolls back state body data to initial state', () => {
+		assert.deepEqual(nextState.bodies, INITIAL_STATE.bodies)
 	})
 
 })

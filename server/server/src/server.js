@@ -21,6 +21,9 @@ export const startServer  = (store) => {
 			store.dispatch(action)
 		})
 
+		socket.on('disconnect', function () {
+	    store.dispatch({type: 'REMOVE_PLAYER', playerId: socket.id});
+	  });
 	})
 	
 	store.subscribe(
@@ -30,7 +33,6 @@ export const startServer  = (store) => {
 			const {current, previous} = state.level
 			if(current === null || current !== previous) {
 				const sockets = io.sockets.connected
-				console.log(state.players)
 				for(let socket in sockets) {
 					sockets[socket].emit('state', state.send(socket))
 				}

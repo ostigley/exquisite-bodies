@@ -3,6 +3,7 @@ import crop 					from '../../../server/src/image-functions/crop.js'
 import {
 	startGame,
 	addPlayer,
+	removePlayer,
 	addBodyPart}		from '../../../server/src/core.js'
 import 	{
 	expect,
@@ -84,6 +85,18 @@ describe ('Application logic for adding a player', () => {
 		state = addPlayer(state, player3)
 
 		assert.equal(state.level.current, 1)
+	})
+})
+
+describe ('Application logic for removing a player', () => {
+	const [player1, player2, player3, player4] = [1,2,3,4]
+	const state0 = startGame(player1)
+	const nextState = addPlayer(state0, player2)
+
+	//remove player2, game state updated
+	it('removes a player from state', () => {
+		let stateMinus = removePlayer(nextState, 2)
+		assert.deepEqual(stateMinus, state0)
 	})
 })
 
