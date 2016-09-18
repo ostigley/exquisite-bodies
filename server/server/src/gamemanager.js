@@ -8,7 +8,7 @@ const newGame = () => {
 
 const subscribePlayer = (io, socket, game) => {
 	game.subscribe( () => {
-		const state = store.getState()
+		const state = game.getState()
 		const {current, previous} = state.level
 		if(current === null || current !== previous) {
 				socket.emit('state', state.send.call(state, socket.id))
@@ -21,32 +21,37 @@ const newPlayer = (gameFloor, players, io) => {
 	// check if need to change nextGameId if game is full
 
 	return {
-		add: socket => {
-			
+		add: socket => { 
 			if (gameFloor.freeGames.length === 0) {
-				let newgame = makeStore()
-				let gameId = newgame.getState().gameId
-				gameFloor[gameId] = newgame
-				gameFloor.freeGames.push(gameId)
+				let newgame = makeStore();
+				let gameId = Math.floor(Math.random()*(10000000000-1000000))
+				gameFloor[gameId] = newgame;
+				gameFloor.freeGames.push(gameId);
 			}
-
-			const game = gameFloor.freeGames[0]
+			const gameId = gameFloor.freeGames[0]
+			const game = gameFloor[gameId]
 			//subscribe player to game changes
 			subscribePlayer(io, socket, game)
 
 			//update game
 			game.dispatch({
 					type: 'ADD_PLAYER', 
-					playerId: socket.id
+					playerId: socket.id,
+					gameId: gameId
 			})
 
-			//update game manager
-			players[socketId] = game.getState().gameId
+			gameFloor.freeGames = updateFreeGames(game, gameFloor.freeGames)
 
-			gameFloor.nextGameId = game.gestState().players.num === 3 
-				? nextGameId++
-				: nextGameId
 		}
+	}
+}
+
+const updateFreeGames = (game, freeGames) => {
+	if (game.getState().players.num === 3) {
+		freeGames.splice(freeGames.indexOf(game.getState().gameId), 1)
+	}
+	return freeGames
+
 }
 
 const removePlayer = (gameFloor, players) => {
@@ -54,7 +59,7 @@ const removePlayer = (gameFloor, players) => {
 		eject: socketId => {
 			const game = gameFloor[players[socketId]]
 			game.dispatch({
-				type: 'REMOVE_PLAYER'
+				type: 'REMOVE_PLAYER',
 				playerId: socketId
 			})
 			delete players[socketId]
@@ -74,7 +79,7 @@ const updateGame = (gameFloor) => {
 
 export const GAMEMANAGER = (io) => {
 	let gameFloor = {
-		nextGameId: 1
+		freeGames: []
 	}
 
 	let players = {}
@@ -84,8 +89,10 @@ export const GAMEMANAGER = (io) => {
 		newPlayer(gameFloor, players, io),
 		removePlayer(gameFloor, players),
 		updateGame(gameFloor),
+		{print: () => Object.assign({},gameFloor,players)}
 	)	
 }
+
 
 
 

@@ -10,7 +10,7 @@ export default function reducer(state = {}, action) {
     case('NEW_GAME'): 
       return startGame(action.playerId)
     case('ADD_PLAYER'):
-      return addPlayer(state, action.playerId)
+      return addPlayer(state, action.playerId, action.gameId)
     case('REMOVE_PLAYER'):
   		return removePlayer(state, action.playerId)
   	case('ADD_DRAWING'):
