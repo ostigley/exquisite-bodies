@@ -17,7 +17,7 @@ const subscribePlayer = (io, socket, game) => {
 	)
 }
 
-const newPlayer = (gameFloor, players, io) => {
+const newPlayer = (gameFloor, io) => {
 	// check if need to change nextGameId if game is full
 
 	return {
@@ -25,11 +25,12 @@ const newPlayer = (gameFloor, players, io) => {
 			if (gameFloor.freeGames.length === 0) {
 				let newgame = makeStore();
 				let gameId = Math.floor(Math.random()*(10000000000-1000000))
-				gameFloor[gameId] = newgame;
+				gameFloor.activeGames[gameId] = newgame;
 				gameFloor.freeGames.push(gameId);
 			}
 			const gameId = gameFloor.freeGames[0]
-			const game = gameFloor[gameId]
+			const game = gameFloor.activeGames[gameId]
+			gameFloor.players[socket.id] = gameId
 			//subscribe player to game changes
 			subscribePlayer(io, socket, game)
 
@@ -54,15 +55,15 @@ const updateFreeGames = (game, freeGames) => {
 
 }
 
-const removePlayer = (gameFloor, players) => {
+const removePlayer = (gameFloor) => {
 	return {
-		eject: socketId => {
-			const game = gameFloor[players[socketId]]
+		eject: socket => {
+			const game = gameFloor.players[socket.id]
 			game.dispatch({
 				type: 'REMOVE_PLAYER',
-				playerId: socketId
+				playerId: socket.id
 			})
-			delete players[socketId]
+			delete players[socket.id]
 			//change nextgame id to an array of empty games
 		}
 	}
@@ -79,20 +80,21 @@ const updateGame = (gameFloor) => {
 
 export const GAMEMANAGER = (io) => {
 	let gameFloor = {
-		freeGames: []
+		activeGames: {},
+		freeGames: [],
+		players: {}
 	}
 
 	let players = {}
 
 	return Object.assign(
 		{},
-		newPlayer(gameFloor, players, io),
-		removePlayer(gameFloor, players),
+		newPlayer(gameFloor, io),
+		removePlayer(gameFloor),
 		updateGame(gameFloor),
-		{print: () => Object.assign({},gameFloor,players)}
+		{print: () => Object.assign({},gameFloor)}
 	)	
 }
-
 
 
 

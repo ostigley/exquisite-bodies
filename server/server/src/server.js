@@ -17,13 +17,6 @@ export const startServer  = () => {
 
 	io.on('connection', (socket) => {
 		gamemanager.add(socket)
-		gamemanager
-
-		if(store.getState().players) {
-			store.dispatch({type: 'ADD_PLAYER', playerId: socket.id})
-		} else {
-			store.dispatch({type: 'NEW_GAME', playerId: socket.id})
-		}
 
 		socket.on('action', (action) => {
 			store.dispatch(action)
@@ -34,19 +27,19 @@ export const startServer  = () => {
 	  });
 	})
 	
-	store.subscribe(
-		() => {
-			const state = store.getState()
-			state.send.bind(state)
-			const {current, previous} = state.level
-			if(current === null || current !== previous) {
-				const sockets = io.sockets.connected
-				for(let socket in sockets) {
-					sockets[socket].emit('state', state.send(socket))
-				}
-			}
-		}
-	)
+	// store.subscribe(
+	// 	() => {
+	// 		const state = store.getState()
+	// 		state.send.bind(state)
+	// 		const {current, previous} = state.level
+	// 		if(current === null || current !== previous) {
+	// 			const sockets = io.sockets.connected
+	// 			for(let socket in sockets) {
+	// 				sockets[socket].emit('state', state.send(socket))
+	// 			}
+	// 		}
+	// 	}
+	// )
 
 	http.listen(3000, function(){
 	  console.log('listening on *:3000');
