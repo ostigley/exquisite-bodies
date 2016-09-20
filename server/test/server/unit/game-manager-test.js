@@ -81,7 +81,7 @@ describe('removing player 6 from a 2 game floor', function() {
 			.then(gameManager => {
 				let {freeGames, activeGames} = gameManager.print()
 				let game2 = activeGames[Object.keys(activeGames)[1]].getState()
-				// gameManager.eject(players[6])
+				gameManager.eject(players[6])
 
 				assert(true)
 				done()

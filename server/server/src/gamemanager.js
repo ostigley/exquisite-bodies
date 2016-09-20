@@ -58,12 +58,13 @@ const updateFreeGames = (game, freeGames) => {
 const removePlayer = (gameFloor) => {
 	return {
 		eject: socket => {
-			const game = gameFloor.players[socket.id]
+			gameId = gameFloor.players[socket.id]
+			const game = gameFloor.activeGames[gameId]
 			game.dispatch({
 				type: 'REMOVE_PLAYER',
 				playerId: socket.id
 			})
-			delete players[socket.id]
+			delete gameFloor.players[socket.id]
 			//change nextgame id to an array of empty games
 		}
 	}
