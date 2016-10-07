@@ -32,6 +32,10 @@ const INITIAL_STATE = deepFreeze({
 		num: 1,
 	},
 	send: function (id) {
+		if(!this.players[id]) {
+			console.log('player id: ' + id)
+			console.log('players: ', this.players)
+		}
 		return {
 			level: this.level.current,
 			body: this.bodies[this.players[id].body],

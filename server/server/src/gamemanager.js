@@ -10,8 +10,9 @@ const subscribePlayer = (io, socket, game) => {
 	game.subscribe( () => {
 		const state = game.getState()
 		const {current, previous} = state.level
-		if(current === null || current !== previous) {
-				socket.emit('state', state.send.call(state, socket.id))
+		const valid = state.players.hasOwnProperty(socket.id)
+		if((current === null || current !== previous) && valid) {
+				return socket.emit('state', state.send.call(state, socket.id))
 		}
 	}
 	)
@@ -21,7 +22,7 @@ const newPlayer = (gameFloor, io) => {
 	// check if need to change nextGameId if game is full
 
 	return {
-		add: socket => { 
+		add: socket => {
 			if (gameFloor.freeGames.length === 0) {
 				let newgame = makeStore();
 				let gameId = Math.floor(Math.random()*(10000000000-1000000))
@@ -36,7 +37,7 @@ const newPlayer = (gameFloor, io) => {
 
 			//update game
 			game.dispatch({
-					type: 'ADD_PLAYER', 
+					type: 'ADD_PLAYER',
 					playerId: socket.id,
 					gameId: gameId
 			})
@@ -58,7 +59,7 @@ const updateFreeGames = (game, freeGames) => {
 const removePlayer = (gameFloor) => {
 	return {
 		eject: socket => {
-			gameId = gameFloor.players[socket.id]
+			const gameId = gameFloor.players[socket.id]
 			const game = gameFloor.activeGames[gameId]
 			game.dispatch({
 				type: 'REMOVE_PLAYER',
@@ -94,7 +95,7 @@ export const GAMEMANAGER = (io) => {
 		removePlayer(gameFloor),
 		updateGame(gameFloor),
 		{print: () => Object.assign({},gameFloor)}
-	)	
+	)
 }
 
 

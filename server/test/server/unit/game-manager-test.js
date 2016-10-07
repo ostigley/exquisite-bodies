@@ -5,10 +5,13 @@ import {startSocket}	 		from '../../../server/src/socket.js'
 
 // var chai = require("chai");
 // var chaiAsPromised = require("chai-as-promised");
- 
+
 // chai.use(chaiAsPromised);
 
-startSocket()
+const server = startSocket()
+process.on('uncaughtException', () => server.httpServer._events.close())
+// process.on('exit', () => server.httpServer._events.close())
+
 const socketURL = 'http://localhost:3000'
 
 let players = {}
@@ -42,7 +45,7 @@ describe('The GAMEMANAGER', function() {
 				done()
 			})
 	})
-})		
+})
 
 describe('Adding 3 players', function() {
 	this.timeout(5000)
@@ -75,7 +78,7 @@ describe('Adding 6 players', function() {
 })
 
 describe('removing player 6 from a 2 game floor', function() {
-	this.timeout(5000)
+	// this.timeout(5000)
 	it('puts game2 in to free games array', (done) => {
 		setup(io, 6)
 			.then(gameManager => {
@@ -88,5 +91,5 @@ describe('removing player 6 from a 2 game floor', function() {
 			})
 	})
 })
-	
+
 

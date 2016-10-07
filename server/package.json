@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run watch & nodemon ./server/index.js --exec babel-node",
     "watch": "watchify client/index.js -o client/public/bundle.js -dv -t babelify",
-    "test:unit": "mocha test/server/unit/game-manager-test.js --compilers js:babel-core/register --watch",
+    "test:unit": "mocha test/server/unit/** --compilers js:babel-core/register --watch",
     "test:integration": "mocha test/server/integration/*.* --compilers js:babel-core/register",
     "test:all": "mocha test/server/**/*.* --compilers js:babel-core/register"
   },
