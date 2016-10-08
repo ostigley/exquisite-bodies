@@ -6,7 +6,7 @@ import {
 
 export default function reducer(state = {}, action) {
   switch(action.type) {
-    case('NEW_GAME'): 
+    case('NEW_GAME'):
       return startGame(action.playerId)
     case('ADD_PLAYER'):
       return addPlayer(state, action.playerId, action.gameId)
@@ -16,7 +16,7 @@ export default function reducer(state = {}, action) {
   		return addBodyPart(state, action.body, action.part, action.drawing)
     case('RESET'): //testng only
       return {}
-    default: 
+    default:
       return state
   }
 }

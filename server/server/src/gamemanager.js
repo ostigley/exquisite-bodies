@@ -69,7 +69,7 @@ const removePlayer = (gameFloor) => {
 			delete gameFloor.players[socket.id]
 			if (!freeGames.includes(gameId)) {
 				freeGames.push(gameId)
-			} 
+			}
 
 			//change nextgame id to an array of empty games
 		}
@@ -83,8 +83,8 @@ const updateGame = (gameFloor) => {
 			const game = gameFloor.activeGames[gameId]
 			game.dispatch(data)
 			console.log(
-				socketId, 
-				'Updated game', 
+				socketId,
+				'Updated game',
 				gameFloor.players[socketId]
 				)
 		}

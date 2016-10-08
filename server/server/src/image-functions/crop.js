@@ -18,14 +18,14 @@ export default (drawing, width = 700, height = 400, percentage = 0.9) => {
   let dWidth = sWidth;
   let dHeight = sHeight;
   ctx.drawImage(
-    imageObj, 
-    sx, 
-    sy, 
-    sWidth, 
-    sHeight, 
-    dx, 
-    dy, 
-    dWidth, 
+    imageObj,
+    sx,
+    sy,
+    sWidth,
+    sHeight,
+    dx,
+    dy,
+    dWidth,
     dHeight)
   peepData = canvas.toDataURL()
   return peepData

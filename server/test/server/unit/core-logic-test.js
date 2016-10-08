@@ -9,11 +9,11 @@ import 	{
 	expect,
 	assert}					from 'chai'
 import {
-	drawing1, 
-	drawing2, 
-	drawing3,				
-	drawing4,				
-	drawing5,				
+	drawing1,
+	drawing2,
+	drawing3,
+	drawing4,
+	drawing5,
 	drawing6}				from '../../helpers/test-drawings.js'
 
 import {INITIAL_STATE} from '../../../server/src/new-game.js'
@@ -108,7 +108,7 @@ describe('AddBodyPart basic logic', () => {
 	const nextState = addBodyPart(state, body, part, drawing1)
 	const content = nextState.bodies[body][part]
 	const peep = nextState.bodies[body].peep
-	
+
 	describe('The send function', () => {
 		it('returns the correct object propertys', () => {
 			const data = nextState.send(1)
@@ -148,11 +148,11 @@ describe('AddBodyPart makes new level ', () => {
 	const body = 1
 	const part = 'head'
 	var nextState = addPlayer(addPlayer(startGame(player1), player2), player3)
-	
+
 	for (let i=1 ; i < 4; i ++){
 		nextState = addBodyPart(nextState, i, part, drawing1)
 	}
-	
+
 	it('increments to level 2', () => {
 		assert.equal(nextState.level.current, 2)
 		assert.equal(nextState.level.previous, 1)
@@ -163,7 +163,7 @@ describe('AddBodyPart makes new level ', () => {
 	})
 })
 
-describe('Adding a body part has an effect on state.players', () => {	
+describe('Adding a body part has an effect on state.players', () => {
 	const [player1, player2, player3] = [1,2,3]
 	const parts = ['head', 'body', 'feet']
 	const state = addPlayer(addPlayer(startGame(player1), player2), player3)
@@ -184,15 +184,15 @@ describe('Adding a body part has an effect on state.players', () => {
 
 	it('DOES change the player state after after 3 drawings', () => {
 		assert.notDeepEqual(state2.players, state3.players)
-	})	
+	})
 
 	it('does not change the player state after 4 drawings', () => {
 		assert.deepEqual(state3.players, state4.players)
-	})	
+	})
 
 	it('does not change the player state  after 5 drawings', () => {
 		assert.deepEqual(state4.players, state5.players)
-	})	
+	})
 
 	it('does scramble after 6 drawings', () => {
 		assert.notDeepEqual(state5.players, state6.players)
@@ -240,12 +240,12 @@ describe('After 9 rounds', () => {
 			state = addBodyPart(state, k, parts[i], drawing1)
 		}
 	}
-	
+
 	for(let i = 1; i < 4; i++) {
 		it(`each player has their original drawing back: ${i}: ${JSON.stringify(state.players[i])}`, () => {
 			assert.equal(state.players[i].body, i)
 		})
-		
+
 		it('each body has a final drawing dataURL string', () => {
 			expect(state.bodies[i].final).to.not.be.empty
 		})
