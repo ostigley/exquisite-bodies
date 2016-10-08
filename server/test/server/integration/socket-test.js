@@ -4,8 +4,8 @@ import {
 	Should
 } 												from 'chai'
 import {
-	drawing1, 
-	drawing2, 
+	drawing1,
+	drawing2,
 	drawing3}								from '../../helpers/test-drawings.js'
 
 // Start server
@@ -35,7 +35,7 @@ describe('New players Socket connection new game ', () => {
 		const player1 = io.connect(socketURL, {transports: ['websocket'],'force new connection': true})
 		player1.on('connect', () => {
 			const player2 = io.connect(socketURL, {transports: ['websocket'],'force new connection': true})
-			
+
 			player2.on('connect', () => {
 
 				player1.on('state', (data) => {
@@ -84,7 +84,7 @@ describe('New players Socket connection new game ', () => {
 		const player1 = io.connect(socketURL, options)
 		handleUpdate(player1)
 		player1.on('connect', () => {
-			
+
 			const player2 = io.connect(socketURL, options)
 			handleUpdate(player2)
 			player2.on('connect', () => {
@@ -107,10 +107,9 @@ describe('New players Socket connection new game ', () => {
 							endTest(player1, player2, player3, done)
 						}
 					})
-					
+
 				})
 			})
 		})
 	})
 })
-					

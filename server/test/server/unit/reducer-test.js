@@ -3,8 +3,8 @@ import 	{
 	expect,
 	assert}				from 'chai'
 import {
-	drawing1, 
-	drawing2, 
+	drawing1,
+	drawing2,
 	drawing3}			from '../../helpers/test-drawings.js'
 
 	import {
@@ -58,7 +58,7 @@ describe ('Reducer ADD_PLAYER', () => {
 
 	const actions = [
 		{type: 'NEW_GAME', playerId: player1},
-		{type: 'ADD_PLAYER', playerId: player2}	
+		{type: 'ADD_PLAYER', playerId: player2}
 	]
 	const nextState = actions.reduce(reducer, {})
 	it('returns a frozen / immutable object', () => {
@@ -80,9 +80,10 @@ describe ('Reducer ADD_PLAYER', () => {
 describe ('Reducer REMOVE_PLAYER', () => {
 	const actions = [
 		{type: 'NEW_GAME', playerId: player1},
-		{type: 'ADD_PLAYER', playerId: player2},	
-		{type: 'ADD_PLAYER', playerId: player3},	
-		{type: 'REMOVE_PLAYER', playerId: player3}	
+		{type: 'ADD_PLAYER', playerId: player2},
+		{type: 'ADD_PLAYER', playerId: player3},
+		{type: 'REMOVE_PLAYER', playerId: player3}
+
 	]
 	const nextState = actions.reduce(reducer, {})
 
@@ -108,7 +109,7 @@ describe('Reducer ADD_DRAWING', () => {
 
 	const actions = [
 		{type: 'NEW_GAME', playerId: player1},
-		{type: 'ADD_PLAYER', playerId: player2},	
+		{type: 'ADD_PLAYER', playerId: player2},
 		{type: 'ADD_PLAYER', playerId: player3},
 		{
 			type: 'ADD_DRAWING',
@@ -118,10 +119,10 @@ describe('Reducer ADD_DRAWING', () => {
 		}
 	]
 	const nextState = actions.reduce(reducer, {})
-	
+
 	const content = nextState.bodies[body][part]
 	const peep = nextState.bodies[body].peep
-	
+
 	it('returns a frozen / immutable object', () => {
 		assert(Object.isFrozen(nextState), 'it is frozen')
 		assert(Object.isFrozen(nextState.bodies), 'it is frozen')
