@@ -83,6 +83,7 @@ describe ('Reducer REMOVE_PLAYER', () => {
 		{type: 'ADD_PLAYER', playerId: player2},
 		{type: 'ADD_PLAYER', playerId: player3},
 		{type: 'REMOVE_PLAYER', playerId: player3}
+
 	]
 	const nextState = actions.reduce(reducer, {})
 

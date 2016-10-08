@@ -13,6 +13,7 @@ const subscribePlayer = (io, socket, game) => {
 		const valid = state.players.hasOwnProperty(socket.id)
 		if((current === null || current !== previous) && valid) {
 				return socket.emit('state', state.send.call(state, socket.id))
+
 		}
 	}
 	)
@@ -32,6 +33,7 @@ const newPlayer = (gameFloor, io) => {
 			const gameId = gameFloor.freeGames[0]
 			const game = gameFloor.activeGames[gameId]
 			gameFloor.players[socket.id] = gameId
+
 			//subscribe player to game changes
 			subscribePlayer(io, socket, game)
 
@@ -70,8 +72,6 @@ const removePlayer = (gameFloor) => {
 			if (!freeGames.includes(gameId)) {
 				freeGames.push(gameId)
 			}
-
-			//change nextgame id to an array of empty games
 		}
 	}
 }
@@ -87,6 +87,7 @@ const updateGame = (gameFloor) => {
 				'Updated game',
 				gameFloor.players[socketId]
 				)
+
 		}
 	}
 }
@@ -107,6 +108,7 @@ export const GAMEMANAGER = (io) => {
 		updateGame(gameFloor),
 		{print: () => Object.assign({},gameFloor)}
 	)
+
 }
 
 
