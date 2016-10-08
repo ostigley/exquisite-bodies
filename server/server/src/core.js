@@ -65,7 +65,6 @@ export const removePlayer = (state, playerId) => {
 	nextState.bodies= INITIAL_STATE.bodies
 	delete nextState.players[playerId];
 	nextState.players.num--
-	
 	[nextState.level.current, nextState.level.previous] = [null, null]
 
 	return deepFreeze(nextState)

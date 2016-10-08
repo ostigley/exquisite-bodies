@@ -8,39 +8,26 @@ export const startServer  = () => {
 	const http = require('http').Server(app)
 	const io = require('socket.io')(http)
 
-	const gamemanager = GAMEMANAGER(io)
+	const gameManager = GAMEMANAGER(io)
 
 	app.use(express.static(path.join(__dirname,'../../client/public')))
 	app.get('/', function(req, res){
 	  res.sendfile('index.html')
 	});
 
-	io.on('connection', (socket) => {
-		gamemanager.add(socket)
+	io.on('connection', socket => {
+		gameManager.add(socket)
 
-		socket.on('action', (action) => {
-			store.dispatch(action)
+		socket.on('action', action => {
+			gameManager.play(socket.id, action)
 		})
 
 		socket.on('disconnect', function () {
-	    store.dispatch({type: 'REMOVE_PLAYER', playerId: socket.id});
+			console.log(socket.id, 'disconnected')
+			gameManager.eject(socket)
 	  });
 	})
 	
-	// store.subscribe(
-	// 	() => {
-	// 		const state = store.getState()
-	// 		state.send.bind(state)
-	// 		const {current, previous} = state.level
-	// 		if(current === null || current !== previous) {
-	// 			const sockets = io.sockets.connected
-	// 			for(let socket in sockets) {
-	// 				sockets[socket].emit('state', state.send(socket))
-	// 			}
-	// 		}
-	// 	}
-	// )
-
 	http.listen(3000, function(){
 	  console.log('listening on *:3000');
 	});

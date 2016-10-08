@@ -43,7 +43,7 @@ const newPlayer = (gameFloor, io) => {
 			})
 
 			gameFloor.freeGames = updateFreeGames(game, gameFloor.freeGames)
-
+			console.log(socket.id, 'joined game:', gameId)
 		}
 	}
 }
@@ -61,11 +61,16 @@ const removePlayer = (gameFloor) => {
 		eject: socket => {
 			const gameId = gameFloor.players[socket.id]
 			const game = gameFloor.activeGames[gameId]
+			const freeGames = gameFloor.freeGames
 			game.dispatch({
 				type: 'REMOVE_PLAYER',
 				playerId: socket.id
 			})
 			delete gameFloor.players[socket.id]
+			if (!freeGames.includes(gameId)) {
+				freeGames.push(gameId)
+			} 
+
 			//change nextgame id to an array of empty games
 		}
 	}
@@ -74,8 +79,14 @@ const removePlayer = (gameFloor) => {
 const updateGame = (gameFloor) => {
 	return {
 		play: (socketId, data) => {
-			const game = gameFloor[players[socketId]]
+			const gameId = gameFloor.players[socketId]
+			const game = gameFloor.activeGames[gameId]
 			game.dispatch(data)
+			console.log(
+				socketId, 
+				'Updated game', 
+				gameFloor.players[socketId]
+				)
 		}
 	}
 }

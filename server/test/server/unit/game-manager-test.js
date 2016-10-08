@@ -9,8 +9,6 @@ import {startSocket}	 		from '../../../server/src/socket.js'
 // chai.use(chaiAsPromised);
 
 const server = startSocket()
-process.on('uncaughtException', () => server.httpServer._events.close())
-// process.on('exit', () => server.httpServer._events.close())
 
 const socketURL = 'http://localhost:3000'
 
@@ -78,7 +76,6 @@ describe('Adding 6 players', function() {
 })
 
 describe('removing player 6 from a 2 game floor', function() {
-	// this.timeout(5000)
 	it('puts game2 in to free games array', (done) => {
 		setup(io, 6)
 			.then(gameManager => {
@@ -86,7 +83,7 @@ describe('removing player 6 from a 2 game floor', function() {
 				let game2 = activeGames[Object.keys(activeGames)[1]].getState()
 				gameManager.eject(players[6])
 
-				assert(true)
+				expect(freeGames).to.have.length(1)
 				done()
 			})
 	})
