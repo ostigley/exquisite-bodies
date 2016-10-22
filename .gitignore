@@ -1,9 +1,6 @@
-server/node_modules
-server/test/helpers/*.*
+node_modules
+test/helpers/*.*
 
-client/node_modules
-client/ios
-client/android
 
 npm-debug.log
-server/client/public/bundle.js
+client/public/bundle.js
